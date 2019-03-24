@@ -39,6 +39,7 @@ namespace UTK.Screenshot
                     (ScreenshotEditorConfig)AssetDatabase.FindAssets("t:ScriptableObject",new string[] {CONFIGDIRECTORYPATH})
                     .Select(id => AssetDatabase.GUIDToAssetPath(id))
                     .Select(path => AssetDatabase.LoadAssetAtPath(path, typeof(ScreenshotEditorConfig)))
+                    .Where(c => c != null)
                     .FirstOrDefault();
 
             if(config==null)

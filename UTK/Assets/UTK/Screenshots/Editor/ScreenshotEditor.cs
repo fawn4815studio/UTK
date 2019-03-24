@@ -14,7 +14,7 @@ namespace UTK.Screenshot
 
         GameObject targetCamera;
 
-        [MenuItem("UTK/ScreenshotEditor")]
+        [MenuItem("UTK/ScreenshotEditor",false,1)]
         static void Open()
         {
             if (screenshotEditor == null)
@@ -25,10 +25,11 @@ namespace UTK.Screenshot
             screenshotEditor.config = ScreenshotEditorConfig.GetScreenshotEditorConfig();
 
             screenshotEditor.minSize = new Vector2(500,400);
+            screenshotEditor.titleContent.text = "ScreenshotEditor";
             screenshotEditor.ShowUtility();
         }
 
-        [MenuItem("UTK/Quick Screenshot")]
+        [MenuItem("UTK/Quick Screenshot",false,1)]
         static void QuickScreenshot()
         {
             ScreenCapture.CaptureScreenshot(GetScreenshotFileNameFromDateTime());
