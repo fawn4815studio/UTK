@@ -24,11 +24,14 @@ namespace UTK.Screenshot
         [SerializeField]
         int scale;
 
+        [SerializeField]
+        bool isTransparent;
+
         public string SaveFolderPath { get => saveFolderPath; set => saveFolderPath = value; }
         public int ResolutionWidth { get => resolutionWidth; set => resolutionWidth = value; }
         public int ResolutionHeight { get => resolutionHeight; set => resolutionHeight = value; }
         public int Scale { get => scale; set => scale = value; }
-
+        public bool IsTransparent { get => isTransparent; set => isTransparent = value; }
 
         public static ScreenshotEditorConfig GetScreenshotEditorConfig()
         {

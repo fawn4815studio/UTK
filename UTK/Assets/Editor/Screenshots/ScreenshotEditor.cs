@@ -11,6 +11,7 @@ namespace UTK.Screenshot
 
         [SerializeField]
         ScreenshotEditorConfig config;
+
         GameObject targetCamera;
 
         [MenuItem("UTK/ScreenshotEditor")]
@@ -88,12 +89,18 @@ namespace UTK.Screenshot
                     config.ResolutionHeight = Screen.currentResolution.height;
                 }
 
-                var buttonexplain = string.Format("Set default resolution ( {0}x{1} )", ScreenshotEditorConfig.DEFAULTRESOLUTIONWIDTH, ScreenshotEditorConfig.DEFAULTRESOLUTIONHEIGHT);
-                if (GUILayout.Button(buttonexplain))
+                if (GUILayout.Button(string.Format("Set default resolution ( {0}x{1} )", ScreenshotEditorConfig.DEFAULTRESOLUTIONWIDTH, ScreenshotEditorConfig.DEFAULTRESOLUTIONHEIGHT)))
                 {
                     config.ResolutionWidth =  ScreenshotEditorConfig.DEFAULTRESOLUTIONWIDTH;
                     config.ResolutionHeight = ScreenshotEditorConfig.DEFAULTRESOLUTIONHEIGHT;
                 }
+
+                if (GUILayout.Button("Set scene main camera"))
+                {
+                    targetCamera = Camera.main.gameObject;
+                }
+
+                config.IsTransparent = GUILayout.Toggle(config.IsTransparent, "Transparent background");
             }
 
             EditorGUILayout.EndVertical();
@@ -139,13 +146,21 @@ namespace UTK.Screenshot
         void TakeScreenshot()
         {
             var camera = targetCamera.GetComponent<Camera>();
+            var clearflag = camera.clearFlags;
+            var background = camera.backgroundColor;
             var width = config.ResolutionWidth * config.Scale;
             var height = config.ResolutionHeight * config.Scale;
             var current = camera.targetTexture;
 
-            Texture2D ss = new Texture2D(width,height,TextureFormat.RGB24, false);
+            Texture2D ss = new Texture2D(width,height,TextureFormat.ARGB32, false);
             RenderTexture rt = new RenderTexture(width,height,24);
             RenderTexture.active = rt;
+
+            if(config.IsTransparent)
+            {
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = new Color(0,0,0,0);
+            }
 
             camera.targetTexture = rt;
             camera.Render();
@@ -157,12 +172,17 @@ namespace UTK.Screenshot
             File.WriteAllBytes(Path.Combine(config.SaveFolderPath,GetScreenshotFileNameFromDateTime()),bytes);
 
             DestroyImmediate(ss);
+
+            //Reset camera settings...
             camera.targetTexture = current;
+            camera.clearFlags = clearflag;
+            camera.backgroundColor = background;
+
         }
 
         static string GetScreenshotFileNameFromDateTime()
         {
-            var name = string.Format("{0}_{1}.png", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
+            var name = string.Format("{0}_{1}.png", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString());
             name = name.Replace("/", "_");
             name = name.Replace(":", "_");
             return name;
