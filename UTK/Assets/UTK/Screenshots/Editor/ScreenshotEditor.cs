@@ -24,6 +24,7 @@ namespace UTK.Screenshot
 
             screenshotEditor.config = ScreenshotEditorConfig.GetScreenshotEditorConfig();
 
+            screenshotEditor.minSize = new Vector2(500,400);
             screenshotEditor.ShowUtility();
         }
 
