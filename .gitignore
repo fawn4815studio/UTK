@@ -5,6 +5,9 @@
 [Bb]uilds/
 [Ll]ogs/
 
+# Ignore tool config
+UTK/Assets/UTK/Config/
+
 # Never ignore Asset meta data
 ![Aa]ssets/**/*.meta
 
@@ -52,3 +55,4 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
