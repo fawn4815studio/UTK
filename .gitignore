@@ -7,6 +7,7 @@
 
 # Ignore tool config
 UTK/Assets/UTK/Config/
+UTK/Assets/UTK/Config.meta
 
 # Never ignore Asset meta data
 ![Aa]ssets/**/*.meta
