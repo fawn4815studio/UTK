@@ -39,6 +39,8 @@ namespace UTK.Screenshot
 
         void OnGUI()
         {
+            EditorGUI.BeginChangeCheck();
+
             var path = config.SaveFolderPath;
             EditorGUILayout.TextField("Save destination",path);
             if (GUILayout.Button("Select Folder"))
@@ -120,6 +122,11 @@ namespace UTK.Screenshot
                 }
             }
 
+            if(EditorGUI.EndChangeCheck())
+            {
+                //Record that there has been a change.
+                EditorUtility.SetDirty(config);
+            }
         }
 
         bool PrepareScreenshot()
