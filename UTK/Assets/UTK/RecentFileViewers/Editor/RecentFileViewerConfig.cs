@@ -1,14 +1,50 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+
 using UnityEditor;
 using UnityEngine;
 
 namespace UTK.RecentFileViewer
 {
+    [System.Serializable]
+    public class RecentOpenFileData
+    {
+        [SerializeField]
+        string name;
+
+        [SerializeField]
+        string path;
+
+        [SerializeField]
+        string id;
+
+        public string Id { get => id;  }
+        public string Name { get => name;}
+        public string Path { get => path;  }
+
+        public RecentOpenFileData(string name, string path)
+        {
+            id = AssetDatabase.AssetPathToGUID(path);
+            this.name = name;
+            this.path = path;
+        }
+    }
+
     public class RecentFileViewerConfig : ScriptableObject
     {
         public static readonly string CONFIGDIRECTORYPATH = "Assets/UTK/Config";
         public static readonly string CONFIGFILEPATH = "Assets/UTK/Config/RecentFileViewerConfig.asset";
+        public static readonly int QUEUELIMIT = 5;
+
+        [SerializeField]
+        List<RecentOpenFileData> recentSceneList = new List<RecentOpenFileData>();
+
+        [SerializeField]
+        List<RecentOpenFileData> recentPrefabList = new List<RecentOpenFileData>();
+
+        public List<RecentOpenFileData> RecentSceneList { get => recentSceneList;   }
+        public List<RecentOpenFileData> RecentPrefabList { get => recentPrefabList; }
 
         public static RecentFileViewerConfig GetRecentFileViewerConfig()
         {
