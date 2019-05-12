@@ -16,12 +16,13 @@ namespace UTK.RecentFileViewer
         [SerializeField]
         RecentFileViewerConfig config;
 
-        enum ViewerAssetType : int
+        enum ViewerTabType : int
         {
             Scene,
-            Prefab
+            Prefab,
+            Option
         }
-        readonly string[] tabs = new string[] { "Scene", "Prefabs"};
+        readonly string[] tabs = new string[] { "Scene", "Prefabs","Options"};
         int currentTabIndex;
 
         Vector2 sceneScrollPos;
@@ -42,7 +43,7 @@ namespace UTK.RecentFileViewer
             recentSceneQueue.Enqueue(d);
             config.RecentSceneList.Add(d);
 
-            if(config.RecentSceneList.Count > RecentFileViewerConfig.QUEUELIMIT)
+            if(config.RecentSceneList.Count > config.QueueLimit)
             {
                 config.RecentSceneList.Remove(recentSceneQueue.Dequeue());
             }
@@ -66,7 +67,7 @@ namespace UTK.RecentFileViewer
             recentPrefabQueue.Enqueue(d);
             config.RecentPrefabList.Add(d);
 
-            if (config.RecentPrefabList.Count > RecentFileViewerConfig.QUEUELIMIT)
+            if (config.RecentPrefabList.Count > config.QueueLimit)
             {
                 config.RecentPrefabList.Remove(recentPrefabQueue.Dequeue());
             }
@@ -113,7 +114,7 @@ namespace UTK.RecentFileViewer
         {
             currentTabIndex = GUILayout.Toolbar(currentTabIndex,tabs);
 
-            if ((int)ViewerAssetType.Scene == currentTabIndex)
+            if ((int)ViewerTabType.Scene == currentTabIndex)
             {
 
                 sceneScrollPos = EditorGUILayout.BeginScrollView(sceneScrollPos, GUI.skin.box);
@@ -135,7 +136,7 @@ namespace UTK.RecentFileViewer
 
                 EditorGUILayout.EndScrollView();
             }
-            else if((int)ViewerAssetType.Prefab == currentTabIndex)
+            else if((int)ViewerTabType.Prefab == currentTabIndex)
             {
 
                 prefabScrollPos = EditorGUILayout.BeginScrollView(prefabScrollPos , GUI.skin.box);
@@ -156,6 +157,24 @@ namespace UTK.RecentFileViewer
                 }
 
                 EditorGUILayout.EndScrollView();
+            }
+            else if((int)ViewerTabType.Option == currentTabIndex)
+            {
+                EditorGUILayout.Space();
+
+                if (GUILayout.Button("Clear scene queue"))
+                {
+                    recentSceneQueue.Clear();
+                    config.RecentSceneList.Clear();
+                }
+
+                if (GUILayout.Button("Clear prefab queue"))
+                {
+                    recentPrefabQueue.Clear();
+                    config.RecentPrefabList.Clear();
+                }
+
+                config.QueueLimit = EditorGUILayout.IntField("Queue limit", config.QueueLimit);
             }
         }
 
