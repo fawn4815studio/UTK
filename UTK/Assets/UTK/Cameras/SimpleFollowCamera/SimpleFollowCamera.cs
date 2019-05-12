@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UTK.Cameras
 {
-    public class TopDownCamera : MonoBehaviour
+    public class SimpleFollowCamera : MonoBehaviour
     {
         [SerializeField]
         GameObject target;
