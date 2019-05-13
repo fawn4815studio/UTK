@@ -76,7 +76,7 @@ namespace UTK.RecentFileViewer
             EditorUtility.SetDirty(config);
         }
 
-        [MenuItem("UTK/RecentFileViewer",false,12)]
+        [MenuItem("UTK/Utility/RecentFileViewer",false,12)]
         static void Open()
         {
             if (recentFileViewer == null)

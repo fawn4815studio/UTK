@@ -14,7 +14,7 @@ namespace UTK.Screenshot
 
         GameObject targetCamera;
 
-        [MenuItem("UTK/ScreenshotEditor",false,1)]
+        [MenuItem("UTK/Screenshot/Editor",false,1)]
         static void Open()
         {
             if (screenshotEditor == null)
@@ -29,7 +29,7 @@ namespace UTK.Screenshot
             screenshotEditor.ShowUtility();
         }
 
-        [MenuItem("UTK/Quick Screenshot",false,1)]
+        [MenuItem("UTK/Screenshot/Quick shot", false,1)]
         static void QuickScreenshot()
         {
             ScreenCapture.CaptureScreenshot(GetScreenshotFileNameFromDateTime());
