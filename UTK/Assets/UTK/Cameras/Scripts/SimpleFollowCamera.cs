@@ -17,6 +17,9 @@ namespace UTK.Cameras
         float smoothTime;
 
         [SerializeField]
+        bool isLateUpdate = true;
+
+        [SerializeField]
         bool enableLookAt;
 
         [SerializeField]
@@ -35,6 +38,7 @@ namespace UTK.Cameras
         public GameObject Target { get => target; private set => target = value; }
         public Vector3 Offset { get => offset; set => offset = value; }
         public Vector3 Velocity { get => velocity;}
+        public bool IsLateUpdate { get => isLateUpdate; set => isLateUpdate = value; }
         public bool EnableLookAt { get => enableLookAt; set => enableLookAt = value; }
         public bool IgnoreTargetAxisX { get => ignoreTargetAxisX; set => ignoreTargetAxisX = value; }
         public bool IgnoreTargetAxisY { get => ignoreTargetAxisY; set => ignoreTargetAxisY = value; }
@@ -47,6 +51,33 @@ namespace UTK.Cameras
             initialPos = t.transform.position + offset;
         }
 
+        #region Editor
+
+#if UNITY_EDITOR
+
+        public void Editor_AcceptOffset()
+        {
+            if(target==null)
+            {
+                Debug.LogError("Need to set the target.");
+                return;
+            }
+
+            //Because want to apply the offset in one frame, ir temporarily set smmothTime to 0.
+            var st = smoothTime;
+            smoothTime = 0.0f;
+
+            ChangeTarget(target);
+            Move();
+
+            //Back smoothTime setting.
+            smoothTime = st;
+        }
+
+#endif
+
+        #endregion
+
         #region Internal
 
         void Start()
@@ -57,7 +88,23 @@ namespace UTK.Cameras
             }
         }
 
+        void Update()
+        {
+            if(!IsLateUpdate)
+            {
+                Move();
+            }
+        }
+
         void LateUpdate()
+        {
+            if (IsLateUpdate)
+            {
+                Move();
+            }
+        }
+
+        void Move()
         {
             if (target == null) return;
 
@@ -67,9 +114,9 @@ namespace UTK.Cameras
             if (IgnoreTargetAxisY) newpos.y = initialPos.y;
             if (IgnoreTargetAxisZ) newpos.z = initialPos.z;
 
-            transform.position = Vector3.SmoothDamp(transform.position,newpos,ref velocity, smoothTime);
+            transform.position = Vector3.SmoothDamp(transform.position, newpos, ref velocity, smoothTime);
 
-            if(EnableLookAt)
+            if (EnableLookAt)
             {
                 transform.LookAt(target.transform);
             }
