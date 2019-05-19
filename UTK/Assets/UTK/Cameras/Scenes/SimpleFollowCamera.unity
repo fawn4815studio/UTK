@@ -486,5 +486,20 @@ PrefabInstance:
       propertyPath: smoothTime
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 2635735720212838560, guid: 2a9f4ab4d6fa3e64ca7ce22e5b1c1d7a,
+        type: 3}
+      propertyPath: ignoreTargetAxisX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2635735720212838560, guid: 2a9f4ab4d6fa3e64ca7ce22e5b1c1d7a,
+        type: 3}
+      propertyPath: ignoreTargetAxisZ
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2635735720212838560, guid: 2a9f4ab4d6fa3e64ca7ce22e5b1c1d7a,
+        type: 3}
+      propertyPath: ignoreTargetAxisY
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a9f4ab4d6fa3e64ca7ce22e5b1c1d7a, type: 3}

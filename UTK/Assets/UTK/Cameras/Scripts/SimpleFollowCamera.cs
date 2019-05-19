@@ -20,14 +20,15 @@ namespace UTK.Cameras
         bool enableLookAt;
 
         [SerializeField]
-        bool ignoreAxisX = false;
+        bool ignoreTargetAxisX = false;
 
         [SerializeField]
-        bool ignoreAxisY = false;
+        bool ignoreTargetAxisY = false;
 
         [SerializeField]
-        bool ignoreAxisZ = false;
+        bool ignoreTargetAxisZ = false;
 
+        Vector3 initialTargetPos;
         Vector3 velocity = Vector3.zero;
 
         #region Property
@@ -35,25 +36,36 @@ namespace UTK.Cameras
         public Vector3 Offset { get => offset; set => offset = value; }
         public Vector3 Velocity { get => velocity;}
         public bool EnableLookAt { get => enableLookAt; set => enableLookAt = value; }
-        public bool IgnoreAxisX { get => ignoreAxisX; set => ignoreAxisX = value; }
-        public bool IgnoreAxisY { get => ignoreAxisY; set => ignoreAxisY = value; }
-        public bool IgnoreAxisZ { get => ignoreAxisZ; set => ignoreAxisZ = value; }
+        public bool IgnoreTargetAxisX { get => ignoreTargetAxisX; set => ignoreTargetAxisX = value; }
+        public bool IgnoreTargetAxisY { get => ignoreTargetAxisY; set => ignoreTargetAxisY = value; }
+        public bool IgnoreTargetAxisZ { get => ignoreTargetAxisZ; set => ignoreTargetAxisZ = value; }
         #endregion
 
         public void ChangeTarget(GameObject t)
         {
             target = t;
+            initialTargetPos = t.transform.position;
+        }
+
+        #region Internal
+
+        void Start()
+        {
+            if(target!=null)
+            {
+                initialTargetPos = target.transform.position;
+            }
         }
 
         void LateUpdate()
         {
             if (target == null) return;
 
-            var newpos = target.transform.position;
+            var newpos = target.transform.position + offset;
 
-            if (!IgnoreAxisX) newpos.x += offset.x;
-            if (!IgnoreAxisY) newpos.y += offset.y;
-            if (!IgnoreAxisZ) newpos.z += offset.z;
+            if (IgnoreTargetAxisX) newpos.x = initialTargetPos.x;
+            if (IgnoreTargetAxisY) newpos.y = initialTargetPos.y;
+            if (IgnoreTargetAxisZ) newpos.z = initialTargetPos.z;
 
             transform.position = Vector3.SmoothDamp(transform.position,newpos,ref velocity, smoothTime);
 
@@ -62,6 +74,8 @@ namespace UTK.Cameras
                 transform.LookAt(target.transform);
             }
         }
+
+        #endregion
 
     }
 }
