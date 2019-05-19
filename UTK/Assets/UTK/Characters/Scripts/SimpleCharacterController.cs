@@ -53,6 +53,7 @@ namespace UTK.Characters
         
         private void Editor_MoveInput()
         {
+            if (!editor_EnableMoveInput) return;
             var vertical    = Input.GetAxis("Vertical");
             var horizontal  = Input.GetAxis("Horizontal");
             moveDirection = new Vector3(horizontal, 0.0f, vertical);
