@@ -28,7 +28,7 @@ namespace UTK.Cameras
         [SerializeField]
         bool ignoreTargetAxisZ = false;
 
-        Vector3 initialTargetPos;
+        Vector3 initialPos;
         Vector3 velocity = Vector3.zero;
 
         #region Property
@@ -44,7 +44,7 @@ namespace UTK.Cameras
         public void ChangeTarget(GameObject t)
         {
             target = t;
-            initialTargetPos = t.transform.position;
+            initialPos = t.transform.position + offset;
         }
 
         #region Internal
@@ -53,7 +53,7 @@ namespace UTK.Cameras
         {
             if(target!=null)
             {
-                initialTargetPos = target.transform.position;
+                initialPos = target.transform.position + offset;
             }
         }
 
@@ -63,9 +63,9 @@ namespace UTK.Cameras
 
             var newpos = target.transform.position + offset;
 
-            if (IgnoreTargetAxisX) newpos.x = initialTargetPos.x;
-            if (IgnoreTargetAxisY) newpos.y = initialTargetPos.y;
-            if (IgnoreTargetAxisZ) newpos.z = initialTargetPos.z;
+            if (IgnoreTargetAxisX) newpos.x = initialPos.x;
+            if (IgnoreTargetAxisY) newpos.y = initialPos.y;
+            if (IgnoreTargetAxisZ) newpos.z = initialPos.z;
 
             transform.position = Vector3.SmoothDamp(transform.position,newpos,ref velocity, smoothTime);
 
