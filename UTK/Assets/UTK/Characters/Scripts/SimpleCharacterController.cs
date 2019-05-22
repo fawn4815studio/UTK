@@ -73,13 +73,13 @@ namespace UTK.Characters
         #region Internal
 
         // Start is called before the first frame update
-        void Start()
+        protected virtual void Start()
         {
             controller = GetComponent<CharacterController>();
         }
 
         // Update is called once per frame
-        void Update()
+        protected virtual void Update()
         {
 
 #if UNITY_EDITOR
@@ -91,7 +91,7 @@ namespace UTK.Characters
         }
 
         //Move controller
-        void Move()
+        protected virtual void Move()
         {
             if (controller.isGrounded)
             {
