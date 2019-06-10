@@ -3,7 +3,7 @@ Unity Tool Kit
 
 1.About
 
-UTK is a set of tools used to create games in Unity.
+UTK is a tool sets that can be used when creating games in Unity.
 
 We frequently use Unity in game production. So we started developing UTK to create a tool that can be used generically in many Unity projects.
 
@@ -29,4 +29,4 @@ Tools to easily open recently used scenes and prefabs
 
 Automatically generate stages based on settings
 
-![AutoStageBuilder](https://github.com/fawn4815studio/UTK/blob/master/UTK/Assets/UTK/Images/RecentFileViewer.PNG)
+![AutoStageBuilder](https://github.com/fawn4815studio/UTK/blob/master/UTK/Assets/UTK/Images/AutoStageBuilder.PNG)
