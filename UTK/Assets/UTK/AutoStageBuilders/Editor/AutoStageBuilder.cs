@@ -14,10 +14,9 @@ namespace UTK.AutoStageBuilder
         enum ViewerTabType : int
         {
             MainProp,
-            SubProp,
             Option
         }
-        readonly string[] tabs = new string[] { "Main Prop", "Sub Prop", "Option" };
+        readonly string[] tabs = new string[] { "Main Prop","Option" };
         int currentTabIndex;
         Vector2 mainPropDataScrollPos;
 
@@ -85,10 +84,6 @@ namespace UTK.AutoStageBuilder
             if(currentTabIndex == (int)ViewerTabType.MainProp)
             {
                 MainPropGUI();
-            }
-            else if(currentTabIndex == (int)ViewerTabType.SubProp)
-            {
-
             }
             else if(currentTabIndex == (int)ViewerTabType.Option)
             {
