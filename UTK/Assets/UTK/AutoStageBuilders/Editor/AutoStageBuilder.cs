@@ -19,7 +19,7 @@ namespace UTK.AutoStageBuilder
         readonly string[] tabs = new string[] { "Main Prop","Option" };
         int currentTabIndex;
         Vector2 mainPropDataScrollPos;
-
+      
         private Runtime.StageData editStageData;
         private string dataSavePath = null;
         private string stageDataName;
@@ -277,7 +277,10 @@ namespace UTK.AutoStageBuilder
 
         private bool Load()
         {
-            dataSavePath = EditorUtility.OpenFilePanel("Open stage data", "Assets", "bytes");
+            string initialpath = "Assets";
+            if (dataSavePath != null) initialpath = dataSavePath;
+
+            dataSavePath = EditorUtility.OpenFilePanel("Open stage data", initialpath, "bytes");
 
             if (!string.IsNullOrEmpty(dataSavePath))
             {
