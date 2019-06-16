@@ -30,12 +30,12 @@ namespace UTK.AutoStageBuilder
         {
             if (autoStageBuilder == null)
             {
-               autoStageBuilder = CreateInstance<AutoStageBuilder>();
+               autoStageBuilder = GetWindow<AutoStageBuilder>();
             }
 
-            autoStageBuilder.minSize = new Vector2(500, 400);
+            autoStageBuilder.minSize = new Vector2(100,100);
             autoStageBuilder.titleContent.text = "AutoStageBuilder";
-            autoStageBuilder.ShowUtility();
+            autoStageBuilder.Show();
         }
 
         #region Internal
