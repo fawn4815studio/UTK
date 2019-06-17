@@ -96,7 +96,7 @@ namespace UTK.AutoStageBuilder.Runtime
         {
 
         }
-
+    
         StageData Load(string path)
         {
             var reader = new StreamReader(path);
@@ -129,14 +129,14 @@ namespace UTK.AutoStageBuilder.Runtime
             var temppropdatas = new List<TempMainPropData>();
             var mainpropscount = data.mainPropCreationData.propDatas.Count;
 
-            foreach (var d in data.mainPropCreationData.propDatas)
+            foreach(var d in data.mainPropCreationData.propDatas)
             {
                 temppropdatas.Add(new TempMainPropData(d));
             }
             temppropdatas.TrimExcess();
 
             //Set minimum limit main prop generate timing
-            foreach (var td in temppropdatas)
+            foreach(var td in temppropdatas)
             {
                 int count = 0;
 
@@ -151,7 +151,7 @@ namespace UTK.AutoStageBuilder.Runtime
                         ++count;
                     }
 
-                    if (count == td.Data.minimumCount)
+                    if(count == td.Data.minimumCount)
                     {
                         break;
                     }
@@ -159,7 +159,7 @@ namespace UTK.AutoStageBuilder.Runtime
             }
 
             //Start generate
-            for (int i = 0; i < data.mainPropCreationData.creationCount; i++)
+            for(int i=0; i<data.mainPropCreationData.creationCount; i++)
             {
                 TempMainPropData td = null;
                 bool isminimumcreate = false;
@@ -168,18 +168,18 @@ namespace UTK.AutoStageBuilder.Runtime
                 {
                     var md = minimumLimitMainPropGenerateTimingDic[i];
 
-                    if (md.Data.enableMaximumLimit && md.GenerateCount + 1 > md.Data.maximumCount)
+                    if(md.Data.enableMaximumLimit && md.GenerateCount + 1 > md.Data.maximumCount)
                     {
                         isminimumcreate = false;
                     }
                     else
                     {
                         td = md;
-                        isminimumcreate = true;
+                       isminimumcreate = true;
                     }
                 }
 
-                if (!isminimumcreate)
+                if(!isminimumcreate)
                 {
                     while (true)
                     {
@@ -202,17 +202,15 @@ namespace UTK.AutoStageBuilder.Runtime
                 GameObject mainprop = null;
 
                 //Is first generate
-                if (generateMainProps.Count == 0)
-                {
-                    mainprop = Instantiate(td.Data.prefabSource, data.mainPropCreationData.origin, Quaternion.identity);
+                if (generateMainProps.Count == 0){
+                    mainprop = Instantiate(td.Data.prefabSource,data.mainPropCreationData.origin,Quaternion.identity);
                     mainprop.transform.parent = data.rootObject.transform;
                 }
-                else
-                {
+                else{
                     var previousprop = generateMainProps.Last();
                     var direction = data.mainPropCreationData.direction.normalized;
 
-                    mainprop = Instantiate(td.Data.prefabSource, previousprop.transform.position, Quaternion.identity);
+                    mainprop = Instantiate(td.Data.prefabSource,previousprop.transform.position, Quaternion.identity);
                     mainprop.transform.parent = data.rootObject.transform;
 
                     var newpos = direction * data.mainPropCreationData.distanceBetweenProp;
