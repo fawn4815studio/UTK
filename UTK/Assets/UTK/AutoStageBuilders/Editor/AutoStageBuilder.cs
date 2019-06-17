@@ -11,17 +11,19 @@ namespace UTK.AutoStageBuilder
     {
         static AutoStageBuilder autoStageBuilder;
 
+        [SerializeField]
+        AutoStageBuilderConfig config;
+
         enum ViewerTabType : int
         {
             MainProp,
             Option
         }
-        readonly string[] tabs = new string[] { "Main Prop","Option" };
+        readonly string[] tabs = new string[] { "Main Prop", "Option" };
         int currentTabIndex;
         Vector2 mainPropDataScrollPos;
-      
+
         private Runtime.StageData editStageData;
-        private string dataSavePath = null;
         private string stageDataName;
         private bool isDirty = false;
 
@@ -30,10 +32,17 @@ namespace UTK.AutoStageBuilder
         {
             if (autoStageBuilder == null)
             {
-               autoStageBuilder = GetWindow<AutoStageBuilder>();
+                autoStageBuilder = GetWindow<AutoStageBuilder>();
             }
 
-            autoStageBuilder.minSize = new Vector2(100,100);
+            autoStageBuilder.config = AutoStageBuilderConfig.GetAutoStageBuilderConfig();
+            if (autoStageBuilder.config.IsAutoLoadStageData)
+            {
+                autoStageBuilder.Load(false);
+            }
+
+
+            autoStageBuilder.minSize = new Vector2(100, 100);
             autoStageBuilder.titleContent.text = "AutoStageBuilder";
             autoStageBuilder.Show();
         }
@@ -44,18 +53,18 @@ namespace UTK.AutoStageBuilder
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                if(GUILayout.Button("Create"))
+                if (GUILayout.Button("Create"))
                 {
                     editStageData = new Runtime.StageData();
                     stageDataName = "NoTitle";
                 }
 
-                if(GUILayout.Button("Open"))
+                if (GUILayout.Button("Open"))
                 {
                     //First check if the current editing is saved.
-                    if(editStageData != null && isDirty)
+                    if (editStageData != null && isDirty)
                     {
-                        if(EditorUtility.DisplayDialog("Stage Data Have Been Modified", "Do you want to save the changes you made in the stage datas", "Save","Don't Save"))
+                        if (EditorUtility.DisplayDialog("Stage Data Have Been Modified", "Do you want to save the changes you made in the stage datas", "Save", "Don't Save"))
                         {
                             if (!Save()) return;
                         }
@@ -81,44 +90,13 @@ namespace UTK.AutoStageBuilder
 
             currentTabIndex = GUILayout.Toolbar(currentTabIndex, tabs);
 
-            if(currentTabIndex == (int)ViewerTabType.MainProp)
+            if (currentTabIndex == (int)ViewerTabType.MainProp)
             {
                 MainPropGUI();
             }
-            else if(currentTabIndex == (int)ViewerTabType.Option)
+            else if (currentTabIndex == (int)ViewerTabType.Option)
             {
-
-            }
-
-            EditorGUILayout.Space();
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                if(editStageData.mainPropCreationData.propDatas.Count > 0)
-                {
-                    if (GUILayout.Button("Generate"))
-                    {
-                        if (CheckStageDataCollect())
-                        {
-                            Runtime.RuntimeAutoStageBuilderManager.Instance.GenerateStageSync(editStageData);
-                            DestroyImmediate(GameObject.FindObjectOfType<Runtime.RuntimeAutoStageBuilderManager>().gameObject);
-
-                            var scene = SceneManager.GetActiveScene();
-                            EditorSceneManager.MarkSceneDirty(scene);
-                        }
-                    }
-                }
-             
-                if (GUILayout.Button("Clear(name base)"))
-                {
-                    var roots = Array.FindAll(FindObjectsOfType<GameObject>(), (item) => (item.transform.parent == null && item.name == stageDataName));
-                    foreach(var r in roots)
-                    {
-                        DestroyImmediate(r);
-                    }
-
-                    var scene = SceneManager.GetActiveScene();
-                    EditorSceneManager.MarkSceneDirty(scene);
-                }
+                OptionGUI();
             }
 
             if (EditorGUI.EndChangeCheck())
@@ -246,6 +224,47 @@ namespace UTK.AutoStageBuilder
                     EditorGUILayout.LabelField("Total Minimum Count : " + totalminimumcount);
                 }
 
+                EditorGUILayout.Space();
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (editStageData.mainPropCreationData.propDatas.Count > 0)
+                    {
+                        if (GUILayout.Button("Generate"))
+                        {
+                            if (CheckStageDataCollect())
+                            {
+                                Runtime.RuntimeAutoStageBuilderManager.Instance.GenerateStageSync(editStageData);
+                                DestroyImmediate(GameObject.FindObjectOfType<Runtime.RuntimeAutoStageBuilderManager>().gameObject);
+
+                                var scene = SceneManager.GetActiveScene();
+                                EditorSceneManager.MarkSceneDirty(scene);
+                            }
+                        }
+                    }
+
+                    if (GUILayout.Button("Clear(name base)"))
+                    {
+                        var roots = Array.FindAll(FindObjectsOfType<GameObject>(), (item) => (item.transform.parent == null && item.name == stageDataName));
+                        foreach (var r in roots)
+                        {
+                            DestroyImmediate(r);
+                        }
+
+                        var scene = SceneManager.GetActiveScene();
+                        EditorSceneManager.MarkSceneDirty(scene);
+                    }
+                }
+            }
+        }
+
+        private void OptionGUI()
+        {
+            EditorGUILayout.Space();
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                config.IsAutoLoadStageData = EditorGUILayout.Toggle(config.IsAutoLoadStageData, GUILayout.Width(10));
+                EditorGUILayout.LabelField("When you start the tool, the stage data you edited last is automatically loaded.");
             }
         }
 
@@ -253,53 +272,63 @@ namespace UTK.AutoStageBuilder
         {
             if (!CheckStageDataCollect()) return false;
 
-            if (dataSavePath == null || !File.Exists(dataSavePath))
+            string initialpath = "Assets";
+            if (config.RecentSaveDestinationPath != null)
             {
-                dataSavePath = EditorUtility.SaveFilePanel("Save stage data", "Assets", stageDataName, "bytes");
+                initialpath = config.RecentSaveDestinationPath;
             }
 
-            if (!string.IsNullOrEmpty(dataSavePath))
+            if (config.RecentEditStageDataPath == null || !File.Exists(config.RecentEditStageDataPath))
             {
-                editStageData.name = stageDataName = Path.GetFileNameWithoutExtension(dataSavePath);
-
-                var json = JsonUtility.ToJson(editStageData);
-                var fs = new FileStream(dataSavePath, FileMode.Create,FileAccess.ReadWrite,FileShare.ReadWrite);
-                var writer = new StreamWriter(fs);
-                writer.WriteLine(json);
-                writer.Flush();
-                writer.Close();
-                isDirty = false;
-                return true;
+                config.RecentEditStageDataPath = EditorUtility.SaveFilePanel("Save stage data", initialpath, stageDataName, "bytes");
             }
 
-            return false;
+            if (string.IsNullOrEmpty(config.RecentEditStageDataPath))
+            {
+                return false;
+            }
+
+            editStageData.name = stageDataName = Path.GetFileNameWithoutExtension(config.RecentEditStageDataPath);
+            var json = JsonUtility.ToJson(editStageData);
+            var fs = new FileStream(config.RecentEditStageDataPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+            var writer = new StreamWriter(fs);
+            writer.WriteLine(json);
+            writer.Flush();
+            writer.Close();
+            isDirty = false;
+            config.RecentSaveDestinationPath = new FileInfo(config.RecentEditStageDataPath).DirectoryName;
+
+            return true;
         }
 
-        private bool Load()
+        private bool Load(bool isusingopenfilepanel = true)
         {
-            string initialpath = "Assets";
-            if (dataSavePath != null) initialpath = dataSavePath;
-
-            dataSavePath = EditorUtility.OpenFilePanel("Open stage data", initialpath, "bytes");
-
-            if (!string.IsNullOrEmpty(dataSavePath))
+            if (isusingopenfilepanel)
             {
-                var reader = new StreamReader(dataSavePath);
-                var json = reader.ReadToEnd();
-                editStageData = JsonUtility.FromJson<Runtime.StageData>(json);
-                isDirty = false;
-                stageDataName = Path.GetFileNameWithoutExtension(dataSavePath);
-                reader.Close();
-
-                foreach (var p in editStageData.mainPropCreationData.propDatas)
-                {
-                    p.prefabSource = AssetDatabase.LoadAssetAtPath<GameObject>(p.prefabPath);
-                }
-
-                return true;
+                string initialpath = "Assets";
+                if (config.RecentLoadDestinationPath != null) initialpath = config.RecentLoadDestinationPath;
+                config.RecentEditStageDataPath = EditorUtility.OpenFilePanel("Open stage data", initialpath, "bytes");
             }
 
-            return false;
+            if (string.IsNullOrEmpty(config.RecentEditStageDataPath))
+            {
+                return false;
+            }
+
+            var reader = new StreamReader(config.RecentEditStageDataPath);
+            var json = reader.ReadToEnd();
+            editStageData = JsonUtility.FromJson<Runtime.StageData>(json);
+            isDirty = false;
+            stageDataName = Path.GetFileNameWithoutExtension(config.RecentEditStageDataPath);
+            reader.Close();
+
+            foreach (var p in editStageData.mainPropCreationData.propDatas)
+            {
+                p.prefabSource = AssetDatabase.LoadAssetAtPath<GameObject>(p.prefabPath);
+            }
+
+            config.RecentLoadDestinationPath = new FileInfo(config.RecentEditStageDataPath).Directory.FullName;
+            return true;
         }
 
         private bool CheckStageDataCollect()
@@ -309,11 +338,11 @@ namespace UTK.AutoStageBuilder
             bool isallmainpropenablemaximumlimit = true;
 
             //Main prop error check
-            foreach(var mp in editStageData.mainPropCreationData.propDatas)
+            foreach (var mp in editStageData.mainPropCreationData.propDatas)
             {
-                if (mp.enableMinimumLimit)  totalminimumcount += mp.minimumCount;
-                if (mp.enableMaximumLimit)  totalmaximumcount += mp.maximumCount;
-                if(isallmainpropenablemaximumlimit) isallmainpropenablemaximumlimit = mp.enableMaximumLimit;
+                if (mp.enableMinimumLimit) totalminimumcount += mp.minimumCount;
+                if (mp.enableMaximumLimit) totalmaximumcount += mp.maximumCount;
+                if (isallmainpropenablemaximumlimit) isallmainpropenablemaximumlimit = mp.enableMaximumLimit;
 
                 //Error if prefab source is null
                 if (mp.prefabSource == null)
@@ -328,7 +357,7 @@ namespace UTK.AutoStageBuilder
                 if (mp.enableMinimumLimit && mp.enableMaximumLimit && mp.minimumCount > mp.maximumCount)
                 {
                     EditorUtility.DisplayDialog("An error was found in the stage data",
-                        mp.prefabSource.name + " : minimumCount must be less than maximumCount.", 
+                        mp.prefabSource.name + " : minimumCount must be less than maximumCount.",
                         "Ok");
                     return false;
                 }
@@ -338,7 +367,7 @@ namespace UTK.AutoStageBuilder
             if (totalminimumcount > editStageData.mainPropCreationData.creationCount)
             {
                 EditorUtility.DisplayDialog("An error was found in the stage data",
-                     "Total minimum count must be less than or equal to main prop creation count", 
+                     "Total minimum count must be less than or equal to main prop creation count",
                      "Ok");
                 return false;
             }
@@ -355,11 +384,11 @@ namespace UTK.AutoStageBuilder
             */
 
             //If the maximum creation limit is enabled for all MainProp, an error if the maximum creation count is less than the total creation count.
-            if(isallmainpropenablemaximumlimit && totalmaximumcount < editStageData.mainPropCreationData.creationCount)
+            if (isallmainpropenablemaximumlimit && totalmaximumcount < editStageData.mainPropCreationData.creationCount)
             {
                 EditorUtility.DisplayDialog(
-                    "An error was found in the stage data", 
-                    "If the maximum limit flag is enabled for all MainProp, the total maximum count must be set to the main prop creation count or more.", 
+                    "An error was found in the stage data",
+                    "If the maximum limit flag is enabled for all MainProp, the total maximum count must be set to the main prop creation count or more.",
                     "Ok");
                 return false;
             }
