@@ -43,7 +43,7 @@ namespace UTK.AutoStageBuilder.Runtime
         }
     }
 
-   
+
     [Serializable]
     public class StageData
     {

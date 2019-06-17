@@ -29,20 +29,20 @@ namespace UTK.Screenshot
 
         public string SaveFolderPath { get { return saveFolderPath; } set { saveFolderPath = value; } }
         public int ResolutionWidth { get { return resolutionWidth; } set { resolutionWidth = value; } }
-        public int ResolutionHeight { get {return resolutionHeight; } set { resolutionHeight = value; } }
+        public int ResolutionHeight { get { return resolutionHeight; } set { resolutionHeight = value; } }
         public int Scale { get { return scale; } set { scale = value; } }
         public bool IsTransparent { get { return isTransparent; } set { isTransparent = value; } }
 
         public static ScreenshotEditorConfig GetScreenshotEditorConfig()
         {
             var config =
-                    (ScreenshotEditorConfig)AssetDatabase.FindAssets("t:ScriptableObject",new string[] {CONFIGDIRECTORYPATH})
+                    (ScreenshotEditorConfig)AssetDatabase.FindAssets("t:ScriptableObject", new string[] { CONFIGDIRECTORYPATH })
                     .Select(id => AssetDatabase.GUIDToAssetPath(id))
                     .Select(path => AssetDatabase.LoadAssetAtPath(path, typeof(ScreenshotEditorConfig)))
                     .Where(c => c != null)
                     .FirstOrDefault();
 
-            if(config==null)
+            if (config == null)
             {
                 config = CreateInstance<ScreenshotEditorConfig>();
                 Save(config);
@@ -53,17 +53,17 @@ namespace UTK.Screenshot
 
         private static void Save(ScreenshotEditorConfig config)
         {
-            if(!Directory.Exists(CONFIGDIRECTORYPATH))
+            if (!Directory.Exists(CONFIGDIRECTORYPATH))
             {
                 Directory.CreateDirectory(CONFIGDIRECTORYPATH);
             }
 
-            if(!File.Exists(CONFIGFILEPATH))
+            if (!File.Exists(CONFIGFILEPATH))
             {
                 AssetDatabase.CreateAsset(config, CONFIGFILEPATH);
                 AssetDatabase.Refresh();
             }
-          
+
         }
     }
 }

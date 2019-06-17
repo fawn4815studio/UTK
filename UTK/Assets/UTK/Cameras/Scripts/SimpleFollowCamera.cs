@@ -13,7 +13,7 @@ namespace UTK.Cameras
         Vector3 offset;
 
         [SerializeField]
-        [Range(0,5)]
+        [Range(0, 5)]
         float smoothTime;
 
         [SerializeField]
@@ -37,7 +37,7 @@ namespace UTK.Cameras
         #region Property
         public GameObject Target { get => target; private set => target = value; }
         public Vector3 Offset { get => offset; set => offset = value; }
-        public Vector3 Velocity { get => velocity;}
+        public Vector3 Velocity { get => velocity; }
         public bool IsLateUpdate { get => isLateUpdate; set => isLateUpdate = value; }
         public bool EnableLookAt { get => enableLookAt; set => enableLookAt = value; }
         public bool IgnoreTargetAxisX { get => ignoreTargetAxisX; set => ignoreTargetAxisX = value; }
@@ -57,7 +57,7 @@ namespace UTK.Cameras
 
         public void Editor_AcceptOffset()
         {
-            if(target==null)
+            if (target == null)
             {
                 Debug.LogError("Need to set the target.");
                 return;
@@ -82,7 +82,7 @@ namespace UTK.Cameras
 
         void Start()
         {
-            if(target!=null)
+            if (target != null)
             {
                 initialPos = target.transform.position + offset;
             }
@@ -90,7 +90,7 @@ namespace UTK.Cameras
 
         void Update()
         {
-            if(!IsLateUpdate)
+            if (!IsLateUpdate)
             {
                 Move();
             }

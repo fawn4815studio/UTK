@@ -22,7 +22,7 @@ namespace UTK.RecentFileViewer
             Prefab,
             Option
         }
-        readonly string[] tabs = new string[] { "Scene", "Prefabs","Options"};
+        readonly string[] tabs = new string[] { "Scene", "Prefabs", "Options" };
         int currentTabIndex;
 
         Vector2 sceneScrollPos;
@@ -34,7 +34,7 @@ namespace UTK.RecentFileViewer
         public void AddSceneQueue(Scene scene)
         {
             //Check if already registered in queue.
-            if (recentSceneQueue.Count(s=>s.Id == AssetDatabase.AssetPathToGUID(scene.path)) != 0)
+            if (recentSceneQueue.Count(s => s.Id == AssetDatabase.AssetPathToGUID(scene.path)) != 0)
             {
                 return;
             }
@@ -43,7 +43,7 @@ namespace UTK.RecentFileViewer
             recentSceneQueue.Enqueue(d);
             config.RecentSceneList.Add(d);
 
-            if(config.RecentSceneList.Count > config.QueueLimit)
+            if (config.RecentSceneList.Count > config.QueueLimit)
             {
                 config.RecentSceneList.Remove(recentSceneQueue.Dequeue());
             }
@@ -76,7 +76,7 @@ namespace UTK.RecentFileViewer
             EditorUtility.SetDirty(config);
         }
 
-        [MenuItem("UTK/Utility/RecentFileViewer",false,12)]
+        [MenuItem("UTK/Utility/RecentFileViewer", false, 12)]
         static void Open()
         {
             if (recentFileViewer == null)
@@ -89,14 +89,14 @@ namespace UTK.RecentFileViewer
 
             recentFileViewer.titleContent.text = "RecentFileViewer";
             recentFileViewer.Show();
-         
+
         }
 
         #region Internal
 
         private void OnEnable()
         {
-            if(recentFileViewer==null)
+            if (recentFileViewer == null)
             {
                 recentFileViewer = this;
                 config = RecentFileViewerConfig.GetRecentFileViewerConfig();
@@ -112,19 +112,19 @@ namespace UTK.RecentFileViewer
 
         void OnGUI()
         {
-            currentTabIndex = GUILayout.Toolbar(currentTabIndex,tabs);
+            currentTabIndex = GUILayout.Toolbar(currentTabIndex, tabs);
 
             if ((int)ViewerTabType.Scene == currentTabIndex)
             {
 
                 sceneScrollPos = EditorGUILayout.BeginScrollView(sceneScrollPos, GUI.skin.box);
                 {
-                  
+
                     foreach (var s in recentSceneQueue)
                     {
                         EditorGUILayout.BeginHorizontal(GUI.skin.box);
                         EditorGUILayout.LabelField(s.Path);
-                        if (GUILayout.Button(s.Name , GUILayout.Width(100)))
+                        if (GUILayout.Button(s.Name, GUILayout.Width(100)))
                         {
                             EditorSceneManager.OpenScene(s.Path);
                             break;
@@ -136,10 +136,10 @@ namespace UTK.RecentFileViewer
 
                 EditorGUILayout.EndScrollView();
             }
-            else if((int)ViewerTabType.Prefab == currentTabIndex)
+            else if ((int)ViewerTabType.Prefab == currentTabIndex)
             {
 
-                prefabScrollPos = EditorGUILayout.BeginScrollView(prefabScrollPos , GUI.skin.box);
+                prefabScrollPos = EditorGUILayout.BeginScrollView(prefabScrollPos, GUI.skin.box);
                 {
 
                     foreach (var p in recentPrefabQueue)
@@ -158,7 +158,7 @@ namespace UTK.RecentFileViewer
 
                 EditorGUILayout.EndScrollView();
             }
-            else if((int)ViewerTabType.Option == currentTabIndex)
+            else if ((int)ViewerTabType.Option == currentTabIndex)
             {
                 EditorGUILayout.Space();
 
@@ -197,16 +197,16 @@ namespace UTK.RecentFileViewer
         {
             if (config == null) return;
 
-            if(recentPrefabQueue ==null)
+            if (recentPrefabQueue == null)
             {
                 recentPrefabQueue = new Queue<RecentOpenFileData>();
-                foreach(var d in config.RecentPrefabList)
+                foreach (var d in config.RecentPrefabList)
                 {
                     recentPrefabQueue.Enqueue(d);
                 }
             }
 
-            if(recentSceneQueue==null)
+            if (recentSceneQueue == null)
             {
                 recentSceneQueue = new Queue<RecentOpenFileData>();
                 foreach (var d in config.RecentSceneList)

@@ -14,7 +14,7 @@ namespace UTK.Screenshot
 
         GameObject targetCamera;
 
-        [MenuItem("UTK/Screenshot/Editor",false,1)]
+        [MenuItem("UTK/Screenshot/Editor", false, 1)]
         static void Open()
         {
             if (screenshotEditor == null)
@@ -24,12 +24,12 @@ namespace UTK.Screenshot
 
             screenshotEditor.config = ScreenshotEditorConfig.GetScreenshotEditorConfig();
 
-            screenshotEditor.minSize = new Vector2(500,400);
+            screenshotEditor.minSize = new Vector2(500, 400);
             screenshotEditor.titleContent.text = "ScreenshotEditor";
             screenshotEditor.ShowUtility();
         }
 
-        [MenuItem("UTK/Screenshot/Quick shot", false,1)]
+        [MenuItem("UTK/Screenshot/Quick shot", false, 1)]
         static void QuickScreenshot()
         {
             ScreenCapture.CaptureScreenshot(GetScreenshotFileNameFromDateTime());
@@ -42,14 +42,14 @@ namespace UTK.Screenshot
             EditorGUI.BeginChangeCheck();
 
             var path = config.SaveFolderPath;
-            EditorGUILayout.TextField("Save destination",path);
+            EditorGUILayout.TextField("Save destination", path);
             if (GUILayout.Button("Select Folder"))
             {
                 config.SaveFolderPath = EditorUtility.OpenFolderPanel("Please select a save destination.", "", "");
             }
             if (GUILayout.Button("Open folder"))
             {
-                if(Application.platform == RuntimePlatform.WindowsEditor)
+                if (Application.platform == RuntimePlatform.WindowsEditor)
                 {
                     System.Diagnostics.Process.Start(config.SaveFolderPath);
                 }
@@ -57,7 +57,7 @@ namespace UTK.Screenshot
                 {
                     EditorUtility.RevealInFinder(config.SaveFolderPath);
                 }
-             
+
             }
 
             EditorGUILayout.Space();
@@ -65,9 +65,10 @@ namespace UTK.Screenshot
             EditorGUILayout.BeginHorizontal(GUI.skin.box);
             {
                 EditorGUILayout.LabelField("Camera");
-                targetCamera = (GameObject)EditorGUILayout.ObjectField(targetCamera,typeof(GameObject),true);
+                targetCamera = (GameObject)EditorGUILayout.ObjectField(targetCamera, typeof(GameObject), true);
 
-                if(targetCamera!=null && targetCamera.GetComponent<Camera>()==null){
+                if (targetCamera != null && targetCamera.GetComponent<Camera>() == null)
+                {
                     targetCamera = null;
                 }
             }
@@ -76,12 +77,12 @@ namespace UTK.Screenshot
             EditorGUILayout.BeginHorizontal(GUI.skin.box);
             {
                 EditorGUILayout.LabelField("Resolution");
-                config.ResolutionWidth  = EditorGUILayout.IntField(config.ResolutionWidth);
+                config.ResolutionWidth = EditorGUILayout.IntField(config.ResolutionWidth);
                 config.ResolutionHeight = EditorGUILayout.IntField(config.ResolutionHeight);
             }
             EditorGUILayout.EndHorizontal();
 
-            config.Scale = EditorGUILayout.IntSlider("Scale", config.Scale,1, 10);
+            config.Scale = EditorGUILayout.IntSlider("Scale", config.Scale, 1, 10);
 
             EditorGUILayout.Space();
             EditorGUILayout.BeginVertical(GUI.skin.box);
@@ -95,7 +96,7 @@ namespace UTK.Screenshot
 
                 if (GUILayout.Button(string.Format("Set default resolution ( {0}x{1} )", ScreenshotEditorConfig.DEFAULTRESOLUTIONWIDTH, ScreenshotEditorConfig.DEFAULTRESOLUTIONHEIGHT)))
                 {
-                    config.ResolutionWidth =  ScreenshotEditorConfig.DEFAULTRESOLUTIONWIDTH;
+                    config.ResolutionWidth = ScreenshotEditorConfig.DEFAULTRESOLUTIONWIDTH;
                     config.ResolutionHeight = ScreenshotEditorConfig.DEFAULTRESOLUTIONHEIGHT;
                 }
 
@@ -114,15 +115,15 @@ namespace UTK.Screenshot
 
             var explain = string.Format("Screenshot taken size : {0}x{1} px", config.ResolutionWidth * config.Scale, config.ResolutionHeight * config.Scale);
             GUILayout.Label(explain);
-            if (GUILayout.Button("Take Screenshot",GUILayout.Width(200),GUILayout.Height(50)))
+            if (GUILayout.Button("Take Screenshot", GUILayout.Width(200), GUILayout.Height(50)))
             {
-                if(PrepareScreenshot())
+                if (PrepareScreenshot())
                 {
                     TakeScreenshot();
                 }
             }
 
-            if(EditorGUI.EndChangeCheck())
+            if (EditorGUI.EndChangeCheck())
             {
                 //Record that there has been a change.
                 EditorUtility.SetDirty(config);
@@ -161,24 +162,24 @@ namespace UTK.Screenshot
             var height = config.ResolutionHeight * config.Scale;
             var current = camera.targetTexture;
 
-            Texture2D ss = new Texture2D(width,height,TextureFormat.ARGB32, false);
-            RenderTexture rt = new RenderTexture(width,height,24);
+            Texture2D ss = new Texture2D(width, height, TextureFormat.ARGB32, false);
+            RenderTexture rt = new RenderTexture(width, height, 24);
             RenderTexture.active = rt;
 
-            if(config.IsTransparent)
+            if (config.IsTransparent)
             {
                 camera.clearFlags = CameraClearFlags.SolidColor;
-                camera.backgroundColor = new Color(0,0,0,0);
+                camera.backgroundColor = new Color(0, 0, 0, 0);
             }
 
             camera.targetTexture = rt;
             camera.Render();
 
-            ss.ReadPixels(new Rect(0, 0,width,height),0, 0);
+            ss.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             ss.Apply();
 
             byte[] bytes = ss.EncodeToPNG();
-            File.WriteAllBytes(Path.Combine(config.SaveFolderPath,GetScreenshotFileNameFromDateTime()),bytes);
+            File.WriteAllBytes(Path.Combine(config.SaveFolderPath, GetScreenshotFileNameFromDateTime()), bytes);
 
             DestroyImmediate(ss);
 

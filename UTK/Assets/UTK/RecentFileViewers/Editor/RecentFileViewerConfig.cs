@@ -19,9 +19,9 @@ namespace UTK.RecentFileViewer
         [SerializeField]
         string id;
 
-        public string Id { get => id;  }
-        public string Name { get => name;}
-        public string Path { get => path;  }
+        public string Id { get => id; }
+        public string Name { get => name; }
+        public string Path { get => path; }
 
         public RecentOpenFileData(string name, string path)
         {
@@ -35,7 +35,7 @@ namespace UTK.RecentFileViewer
     {
         public static readonly string CONFIGDIRECTORYPATH = "Assets/UTK/Config";
         public static readonly string CONFIGFILEPATH = "Assets/UTK/Config/RecentFileViewerConfig.asset";
-        
+
         [SerializeField]
         int queueLimit = 5;
 
@@ -45,7 +45,7 @@ namespace UTK.RecentFileViewer
         [SerializeField]
         List<RecentOpenFileData> recentPrefabList = new List<RecentOpenFileData>();
 
-        public List<RecentOpenFileData> RecentSceneList { get => recentSceneList;   }
+        public List<RecentOpenFileData> RecentSceneList { get => recentSceneList; }
         public List<RecentOpenFileData> RecentPrefabList { get => recentPrefabList; }
         public int QueueLimit { get => queueLimit; set => queueLimit = value; }
 

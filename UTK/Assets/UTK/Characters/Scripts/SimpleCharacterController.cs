@@ -36,7 +36,7 @@ namespace UTK.Characters
         public float Gravity { get => gravity; set => gravity = value; }
         public Vector3 MoveDirection { get => moveDirection; set => moveDirection = value; }
         public bool IsJumping { get => !controller.isGrounded; }
-       
+
         #endregion
 
         #region Editor
@@ -46,12 +46,12 @@ namespace UTK.Characters
         [Space]
         public bool editor_EnableJumpInput;
         public bool editor_EnableMoveInput;
-        
+
         private void Editor_MoveInput()
         {
             if (!editor_EnableMoveInput) return;
-            var vertical    = Input.GetAxis("Vertical");
-            var horizontal  = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            var horizontal = Input.GetAxis("Horizontal");
             moveDirection = new Vector3(horizontal, 0.0f, vertical);
         }
 
@@ -106,7 +106,7 @@ namespace UTK.Characters
             }
             else
             {
-                if(enableJumpingMove)
+                if (enableJumpingMove)
                 {
                     var yvalue = currentDirection.y;
                     currentDirection = moveDirection;
