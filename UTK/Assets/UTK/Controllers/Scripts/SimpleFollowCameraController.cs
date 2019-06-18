@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Cameras
+namespace UTK.Controller.Camera
 {
-    public class SimpleFollowCamera : MonoBehaviour
+    public class SimpleFollowCameraController : MonoBehaviour
     {
         [SerializeField]
         GameObject target;

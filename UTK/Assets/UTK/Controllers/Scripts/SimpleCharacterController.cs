@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Characters
+namespace UTK.Controller.Character
 {
     [RequireComponent(typeof(CharacterController))]
     public class SimpleCharacterController : MonoBehaviour

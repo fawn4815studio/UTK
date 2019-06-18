@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.Cameras
+namespace UTK.Controller.Camera
 {
-    [CustomEditor(typeof(SimpleFollowCamera))]
-    public class SimpleFollowCameraInspector : Editor
+    [CustomEditor(typeof(SimpleFollowCameraController))]
+    public class SimpleFollowCameraControllerInspector : Editor
     {
-        SimpleFollowCamera camera;
+       SimpleFollowCameraController camera;
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            camera = target as SimpleFollowCamera;
+            camera = target as SimpleFollowCameraController;
             if (camera == null)
             {
                 return;
