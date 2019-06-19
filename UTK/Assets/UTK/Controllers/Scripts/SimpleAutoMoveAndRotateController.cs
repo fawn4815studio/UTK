@@ -18,12 +18,18 @@ namespace UTK.Controller
         private ControllerData moveData;   //Update units per second.
         [SerializeField]
         private ControllerData rotateData; //Update degrees per second.
-
+        [SerializeField]
         private bool ignoreTimescale;
-        private float lastRealTime;
 
+        private float lastRealTime;
         private Vector3 initialPos;
         private Quaternion initialRot;
+
+        #region Property
+        public ControllerData MoveData { get => moveData; set => moveData = value; }
+        public ControllerData RotateData { get => rotateData; set => rotateData = value; }
+        public bool IgnoreTimescale { get => ignoreTimescale; set => ignoreTimescale = value; }
+        #endregion
 
         public void ResetPositionAndRotation()
         {
