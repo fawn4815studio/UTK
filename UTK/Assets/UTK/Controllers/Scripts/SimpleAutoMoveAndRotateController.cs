@@ -40,14 +40,14 @@ namespace UTK.Controller
         #region Internal
 
         // Start is called before the first frame update
-        void Start()
+        protected void Start()
         {
             initialPos = transform.position;
             initialRot = transform.rotation;
         }
 
         // Update is called once per frame
-        void Update()
+        protected void Update()
         {
             var deltaTime = Time.deltaTime;
 
