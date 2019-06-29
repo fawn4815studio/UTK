@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.Controller.Runtimes.Camera
+namespace UTK.Controller.Runtime.Camera
 {
     [CustomEditor(typeof(SimpleFollowCameraController))]
     public class SimpleFollowCameraControllerInspector : Editor

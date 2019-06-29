@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Controller.Runtimes.Camera
+namespace UTK.Controller.Runtime.Camera
 {
     public class SimpleFollowCameraController : MonoBehaviour
     {

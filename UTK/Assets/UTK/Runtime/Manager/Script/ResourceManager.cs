@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Runtimes.Managers
+namespace UTK.Runtime.Manager
 {
     public class ResourceManager : MonoBehaviour
     {
