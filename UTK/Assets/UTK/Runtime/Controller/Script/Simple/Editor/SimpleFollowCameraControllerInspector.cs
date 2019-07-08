@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.Controller.Runtime.Camera
+namespace UTK.Runtime.Controller.Simple
 {
     [CustomEditor(typeof(SimpleFollowCameraController))]
     public class SimpleFollowCameraControllerInspector : Editor
     {
-       SimpleFollowCameraController camera;
+        SimpleFollowCameraController camera;
 
         public override void OnInspectorGUI()
         {

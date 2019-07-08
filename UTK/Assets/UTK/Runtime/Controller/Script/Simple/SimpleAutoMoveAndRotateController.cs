@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Runtime.Controller
+namespace UTK.Runtime.Controller.Simple
 {
     public class SimpleAutoMoveAndRotateController : MonoBehaviour
     {
