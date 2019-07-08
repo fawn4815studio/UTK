@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.RecentFileViewer
+namespace UTK.Tool.RecentFileViewer
 {
     [System.Serializable]
     public class RecentOpenFileData

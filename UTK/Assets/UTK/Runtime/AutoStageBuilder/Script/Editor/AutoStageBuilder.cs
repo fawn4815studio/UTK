@@ -5,7 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UTK.AutoStageBuilder
+namespace UTK.Runtime.AutoStageBuilder
 {
     public class AutoStageBuilder : EditorWindow
     {
@@ -23,7 +23,7 @@ namespace UTK.AutoStageBuilder
         int currentTabIndex;
         Vector2 mainPropDataScrollPos;
 
-        private Runtime.StageData editStageData;
+        private StageData editStageData;
         private string stageDataName;
         private bool isDirty = false;
 
@@ -55,7 +55,7 @@ namespace UTK.AutoStageBuilder
             {
                 if (GUILayout.Button("Create"))
                 {
-                    editStageData = new Runtime.StageData();
+                    editStageData = new StageData();
                     stageDataName = "NoTitle";
                 }
 
@@ -118,15 +118,15 @@ namespace UTK.AutoStageBuilder
                 EditorGUILayout.Space();
 
                 EditorGUILayout.LabelField("Mode");
-                data.mode = (Runtime.MainPropCreationMode)GUILayout.Toolbar((int)data.mode, new string[] { "Random", "Direction" });
+                data.mode = (MainPropCreationMode)GUILayout.Toolbar((int)data.mode, new string[] { "Random", "Direction" });
 
-                if (data.mode == Runtime.MainPropCreationMode.Direction)
+                if (data.mode == MainPropCreationMode.Direction)
                 {
                     data.direction = EditorGUILayout.Vector3Field("Creation direction", data.direction);
                     EditorGUILayout.LabelField("Distance between prop");
                     data.distanceBetweenProp = EditorGUILayout.FloatField(data.distanceBetweenProp);
                 }
-                else if (data.mode == Runtime.MainPropCreationMode.Random)
+                else if (data.mode == MainPropCreationMode.Random)
                 {
                     EditorGUILayout.LabelField("Whether sure to concatenate main prop");
                     data.whetherSureToConcatenateProps = EditorGUILayout.Toggle(data.whetherSureToConcatenateProps);
@@ -138,7 +138,7 @@ namespace UTK.AutoStageBuilder
                 {
                     if (GUILayout.Button("Add", GUILayout.Width(100)))
                     {
-                        data.propDatas.Add(new Runtime.MainPropData());
+                        data.propDatas.Add(new MainPropData());
                     }
 
                     if (GUILayout.Button("Remove All", GUILayout.Width(100)))
@@ -149,7 +149,7 @@ namespace UTK.AutoStageBuilder
 
                 mainPropDataScrollPos = EditorGUILayout.BeginScrollView(mainPropDataScrollPos, GUI.skin.box);
                 {
-                    Runtime.MainPropData removepropdata = null;
+                    MainPropData removepropdata = null;
                     foreach (var prop in data.propDatas)
                     {
                         EditorGUILayout.Space();
@@ -233,8 +233,8 @@ namespace UTK.AutoStageBuilder
                         {
                             if (CheckStageDataCollect())
                             {
-                                Runtime.RuntimeAutoStageBuilderManager.Instance.GenerateStageSync(editStageData);
-                                DestroyImmediate(GameObject.FindObjectOfType<Runtime.RuntimeAutoStageBuilderManager>().gameObject);
+                                RuntimeAutoStageBuilderManager.Instance.GenerateStageSync(editStageData);
+                                DestroyImmediate(GameObject.FindObjectOfType<RuntimeAutoStageBuilderManager>().gameObject);
 
                                 var scene = SceneManager.GetActiveScene();
                                 EditorSceneManager.MarkSceneDirty(scene);
@@ -317,7 +317,7 @@ namespace UTK.AutoStageBuilder
 
             var reader = new StreamReader(config.RecentEditStageDataPath);
             var json = reader.ReadToEnd();
-            editStageData = JsonUtility.FromJson<Runtime.StageData>(json);
+            editStageData = JsonUtility.FromJson<StageData>(json);
             isDirty = false;
             stageDataName = Path.GetFileNameWithoutExtension(config.RecentEditStageDataPath);
             reader.Close();

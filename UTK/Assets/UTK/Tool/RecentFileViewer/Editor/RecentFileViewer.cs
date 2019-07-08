@@ -6,7 +6,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UTK.RecentFileViewer
+namespace UTK.Tool.RecentFileViewer
 {
     public class RecentFileViewer : EditorWindow
     {

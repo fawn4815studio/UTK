@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.Screenshot
+namespace UTK.Tool.Screenshot
 {
     public class ScreenshotEditorConfig : ScriptableObject
     {

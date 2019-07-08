@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.AutoStageBuilder
+namespace UTK.Runtime.AutoStageBuilder
 {
     public class AutoStageBuilderConfig : ScriptableObject
     {

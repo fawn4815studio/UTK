@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.AutoStageBuilder.Runtime
+namespace UTK.Runtime.AutoStageBuilder
 {
     public enum MainPropCreationMode : int
     {

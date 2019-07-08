@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace UTK.AutoStageBuilder.Runtime
+namespace UTK.Runtime.AutoStageBuilder
 {
     public class RuntimeAutoStageBuilderManager : MonoBehaviour
     {
@@ -101,7 +101,7 @@ namespace UTK.AutoStageBuilder.Runtime
         {
             var reader = new StreamReader(path);
             var json = reader.ReadToEnd();
-            return JsonUtility.FromJson<Runtime.StageData>(json);
+            return JsonUtility.FromJson<StageData>(json);
         }
 
         void InternalGenerateStageSync(StageData data)

@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace UTK.Screenshot
+namespace UTK.Tool.Screenshot
 {
     public class ScreenshotEditor : EditorWindow
     {
