@@ -8,6 +8,7 @@ namespace UTK.Runtime.Controller.Effect
 {
     public class EffectController : MonoBehaviour
     {
+        public bool isAutoDestroy = false;
         private List<ParticleSystem> particles;
         private List<Renderer> renderers;
 
@@ -45,11 +46,6 @@ namespace UTK.Runtime.Controller.Effect
             }
         }
 
-        public bool IsAutoDestroy
-        {
-            get; set;
-        }
-
         #endregion
 
 
@@ -60,7 +56,6 @@ namespace UTK.Runtime.Controller.Effect
         {
             particles = GetComponentsInChildren<ParticleSystem>(true).ToList();
             renderers = GetComponentsInChildren<Renderer>(true).ToList();
-            IsAutoDestroy = true;
         }
 
         /// <summary>
@@ -68,7 +63,7 @@ namespace UTK.Runtime.Controller.Effect
         /// </summary>
         void Update()
         {
-            if (IsAutoDestroy)
+            if (isAutoDestroy)
             {
                 if (!IsAlive)
                 {

@@ -4903,6 +4903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c74598fd6cf39bf40aba85545247556c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAutoDestroy: 1
 --- !u!199 &889602676
 ParticleSystemRenderer:
   serializedVersion: 6
