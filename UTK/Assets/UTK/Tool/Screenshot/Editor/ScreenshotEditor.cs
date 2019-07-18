@@ -2,11 +2,14 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UTK.Tool.Common;
 
 namespace UTK.Tool.Screenshot
 {
     public class ScreenshotEditor : EditorWindow
     {
+        static readonly string CONFIGDIRECTORYPATH = "Assets/UTK/Config";
+        static readonly string CONFIGFILEPATH = "Assets/UTK/Config/ScreenshotEditorConfig.asset";
         static ScreenshotEditor screenshotEditor;
 
         [SerializeField]
@@ -22,7 +25,7 @@ namespace UTK.Tool.Screenshot
                 screenshotEditor = CreateInstance<ScreenshotEditor>();
             }
 
-            screenshotEditor.config = ScreenshotEditorConfig.GetScreenshotEditorConfig();
+            screenshotEditor.config = ConfigUtility.GetOrCreateToolConfig<ScreenshotEditorConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
 
             screenshotEditor.minSize = new Vector2(500, 400);
             screenshotEditor.titleContent.text = "ScreenshotEditor";
