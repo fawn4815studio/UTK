@@ -11,7 +11,7 @@ namespace UTK.Runtime.Manager
     /// </summary>
     public class ResourceManager : SingletonBase<ResourceManager>
     {
-        private Dictionary<string, UnityEngine.Object> cacheDic = new Dictionary<string, UnityEngine.Object>();
+        private Dictionary<string, ResourceData> cacheDic = new Dictionary<string, ResourceData>();
 
         /// <summary>
         /// Load resource specified by path synchronously.
@@ -23,11 +23,13 @@ namespace UTK.Runtime.Manager
         {
             if (cacheDic.ContainsKey(filepath))
             {
-                return cacheDic[filepath] as Type;
+                var d = cacheDic[filepath];
+                d.IncRef();
+                return d.GetData<Type>();
             }
 
             var resource = Resources.Load<Type>(filepath);
-            cacheDic[filepath] = resource;
+            cacheDic[filepath] = new ResourceData(resource);
 
             return resource;
         }
@@ -43,7 +45,9 @@ namespace UTK.Runtime.Manager
         {
             if (cacheDic.ContainsKey(filepath))
             {
-                oncomplete?.Invoke(cacheDic[filepath] as Type);
+                var d = cacheDic[filepath];
+                d.IncRef();
+                oncomplete?.Invoke(d.GetData<Type>());
             }
 
             StartCoroutine(LoadAsyncCo(filepath, oncomplete));
@@ -57,8 +61,13 @@ namespace UTK.Runtime.Manager
         {
             if (cacheDic.ContainsKey(filepath))
             {
-                Resources.UnloadAsset(cacheDic[filepath]);
-                cacheDic.Remove(filepath);
+                var d = cacheDic[filepath];
+
+                if (d.DecRef() <= 0)
+                {
+                    cacheDic.Remove(filepath);
+                    Resources.UnloadUnusedAssets();
+                }
             }
         }
 
@@ -67,7 +76,22 @@ namespace UTK.Runtime.Manager
         /// </summary>
         public void UnloadAll()
         {
-            cacheDic.Clear();
+            var removelist = new List<KeyValuePair<string, ResourceData>>();
+
+            foreach (var c in cacheDic)
+            {
+                if (c.Value.DecRef() <= 0)
+                {
+                    removelist.Add(c);
+                }
+            }
+
+            var ra = removelist.ToArray();
+            for (int i = 0; i < ra.Length; i++)
+            {
+                cacheDic.Remove(ra[i].Key);
+            }
+
             Resources.UnloadUnusedAssets();
         }
 
@@ -83,7 +107,7 @@ namespace UTK.Runtime.Manager
                 yield return null;
             }
 
-            cacheDic[filepath] = resReq.asset;
+            cacheDic[filepath] = new ResourceData(resReq.asset);
             oncomplete?.Invoke(resReq.asset as Type);
         }
 
