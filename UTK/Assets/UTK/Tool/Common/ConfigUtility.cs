@@ -10,6 +10,35 @@ namespace UTK.Tool.Common
     /// </summary>
     public static class ConfigUtility
     {
+        public enum AssetType
+        {
+            Scene,
+            Prefab,
+            Material,
+            Texture,
+            Audio,
+            Script,
+            None  //Not found
+        }
+
+        /// <summary>
+        /// Get asset type from asset file path.
+        /// </summary>
+        /// <param name="path">Asset file path.</param>
+        /// <returns><see cref="AssetType"/></returns>
+        public static AssetType GetAssetType(string path)
+        {
+            switch (System.IO.Path.GetExtension(path))
+            {
+                case ".scene": return AssetType.Scene;
+                case ".mat": return AssetType.Material;
+                case ".prefab": return AssetType.Prefab;
+                case ".cs": return AssetType.Script;
+            }
+
+            return AssetType.None;
+        }
+
         /// <summary>
         /// Get or create tool config.
         /// </summary>

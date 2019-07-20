@@ -33,9 +33,6 @@ namespace UTK.Tool.RecentFileViewer
 
     public class RecentFileViewerConfig : ScriptableObject
     {
-        public static readonly string CONFIGDIRECTORYPATH = "Assets/UTK/Config";
-        public static readonly string CONFIGFILEPATH = "Assets/UTK/Config/RecentFileViewerConfig.asset";
-
         [SerializeField]
         int queueLimit = 5;
 
@@ -45,42 +42,22 @@ namespace UTK.Tool.RecentFileViewer
         [SerializeField]
         List<RecentOpenFileData> recentPrefabList = new List<RecentOpenFileData>();
 
+        [SerializeField]
+        List<RecentOpenFileData> recentMaterialList = new List<RecentOpenFileData>();
+
+        [SerializeField]
+        List<RecentOpenFileData> recentTextureList = new List<RecentOpenFileData>();
+
+        [SerializeField]
+        List<RecentOpenFileData> recentScriptList = new List<RecentOpenFileData>();
+
         public List<RecentOpenFileData> RecentSceneList { get => recentSceneList; }
         public List<RecentOpenFileData> RecentPrefabList { get => recentPrefabList; }
+        public List<RecentOpenFileData> RecentMaterialList { get => recentMaterialList; }
+        public List<RecentOpenFileData> RecentTextureList { get => recentTextureList;}
+        public List<RecentOpenFileData> RecentScriptList { get => recentScriptList;}
         public int QueueLimit { get => queueLimit; set => queueLimit = value; }
-
-        public static RecentFileViewerConfig GetRecentFileViewerConfig()
-        {
-            var config =
-                    (RecentFileViewerConfig)AssetDatabase.FindAssets("t:ScriptableObject", new string[] { CONFIGDIRECTORYPATH })
-                    .Select(id => AssetDatabase.GUIDToAssetPath(id))
-                    .Select(path => AssetDatabase.LoadAssetAtPath(path, typeof(RecentFileViewerConfig)))
-                    .Where(c => c != null)
-                    .FirstOrDefault();
-
-            if (config == null)
-            {
-                config = CreateInstance<RecentFileViewerConfig>();
-                Save(config);
-            }
-
-            return config;
-        }
-
-        private static void Save(RecentFileViewerConfig config)
-        {
-            if (!Directory.Exists(CONFIGDIRECTORYPATH))
-            {
-                Directory.CreateDirectory(CONFIGDIRECTORYPATH);
-            }
-
-            if (!File.Exists(CONFIGFILEPATH))
-            {
-                AssetDatabase.CreateAsset(config, CONFIGFILEPATH);
-                AssetDatabase.Refresh();
-            }
-
-        }
+   
     }
 }
 
