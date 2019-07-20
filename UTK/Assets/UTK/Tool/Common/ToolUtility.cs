@@ -30,7 +30,7 @@ namespace UTK.Tool.Common
         {
             switch (System.IO.Path.GetExtension(path))
             {
-                case ".scene": return AssetType.Scene;
+                case ".unity": return AssetType.Scene;
                 case ".mat": return AssetType.Material;
                 case ".prefab": return AssetType.Prefab;
                 case ".cs": return AssetType.Script;
