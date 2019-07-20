@@ -72,12 +72,12 @@ namespace UTK.Tool.RecentFileViewer
             }
 
             List<RecentOpenFileData> activelist = null;
-            switch (ConfigUtility.GetAssetType(path))
+            switch (ToolUtility.GetAssetType(path))
             {
-                case ConfigUtility.AssetType.Material: activelist = config.RecentMaterialList; break;
-                case ConfigUtility.AssetType.Prefab: activelist = config.RecentPrefabList; break;
-                case ConfigUtility.AssetType.Script: activelist = config.RecentScriptList; break;
-                case ConfigUtility.AssetType.Texture: activelist = config.RecentTextureList; break;
+                case ToolUtility.AssetType.Material: activelist = config.RecentMaterialList; break;
+                case ToolUtility.AssetType.Prefab: activelist = config.RecentPrefabList; break;
+                case ToolUtility.AssetType.Script: activelist = config.RecentScriptList; break;
+                case ToolUtility.AssetType.Texture: activelist = config.RecentTextureList; break;
             }
 
             if (activelist == null) return;
@@ -110,7 +110,7 @@ namespace UTK.Tool.RecentFileViewer
             {
                 recentFileViewer = CreateInstance<RecentFileViewer>();
             }
-            recentFileViewer.config = ConfigUtility.GetOrCreateToolConfig<RecentFileViewerConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
+            recentFileViewer.config = ToolUtility.GetOrCreateToolConfig<RecentFileViewerConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
             recentFileViewer.RegisterEvent();
 
             recentFileViewer.titleContent.text = "RecentFileViewer";
@@ -125,7 +125,7 @@ namespace UTK.Tool.RecentFileViewer
             if (recentFileViewer == null)
             {
                 recentFileViewer = this;
-                config = ConfigUtility.GetOrCreateToolConfig<RecentFileViewerConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
+                config = ToolUtility.GetOrCreateToolConfig<RecentFileViewerConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
                 RegisterEvent();
             }
         }
@@ -260,28 +260,28 @@ namespace UTK.Tool.RecentFileViewer
 
                     if (GUILayout.Button("Open", GUILayout.Width(100)))
                     {
-                        switch (ConfigUtility.GetAssetType(p.Path))
+                        switch (ToolUtility.GetAssetType(p.Path))
                         {
-                            case ConfigUtility.AssetType.Scene:
+                            case ToolUtility.AssetType.Scene:
                                 EditorSceneManager.OpenScene(p.Path);
                                 break;
 
-                            case ConfigUtility.AssetType.Prefab:
+                            case ToolUtility.AssetType.Prefab:
                                 AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<GameObject>(p.Path));
                                 break;
 
-                            case ConfigUtility.AssetType.Material:
+                            case ToolUtility.AssetType.Material:
                                 AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<Material>(p.Path));
                                 break;
 
-                            case ConfigUtility.AssetType.Texture:
+                            case ToolUtility.AssetType.Texture:
                                 AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<Texture>(p.Path));
                                 break;
 
-                            case ConfigUtility.AssetType.Audio:
+                            case ToolUtility.AssetType.Audio:
                                 AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<AudioClip>(p.Path));
                                 break;
-                            case ConfigUtility.AssetType.Script:
+                            case ToolUtility.AssetType.Script:
                                 AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<Object>(p.Path));
                                 break;
                         }

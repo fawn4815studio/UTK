@@ -25,7 +25,7 @@ namespace UTK.Tool.Screenshot
                 screenshotEditor = CreateInstance<ScreenshotEditor>();
             }
 
-            screenshotEditor.config = ConfigUtility.GetOrCreateToolConfig<ScreenshotEditorConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
+            screenshotEditor.config = ToolUtility.GetOrCreateToolConfig<ScreenshotEditorConfig>(CONFIGDIRECTORYPATH, CONFIGFILEPATH);
 
             screenshotEditor.minSize = new Vector2(500, 400);
             screenshotEditor.titleContent.text = "ScreenshotEditor";

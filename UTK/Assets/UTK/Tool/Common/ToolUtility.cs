@@ -8,7 +8,7 @@ namespace UTK.Tool.Common
     /// <summary>
     /// 
     /// </summary>
-    public static class ConfigUtility
+    public static class ToolUtility
     {
         public enum AssetType
         {
