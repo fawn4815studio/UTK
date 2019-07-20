@@ -2,41 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UTK.Runtime.Common;
 
 namespace UTK.Runtime.Manager
 {
     /// <summary>
     /// ResourceManager can not load AssetBundle. Use AssetBundleManager to load AssetBundle.
     /// </summary>
-    public class ResourceManager : MonoBehaviour
+    public class ResourceManager : SingletonBase<ResourceManager>
     {
         private Dictionary<string, UnityEngine.Object> cacheDic = new Dictionary<string, UnityEngine.Object>();
-
-        #region Singleton
-
-        private static ResourceManager instance;
-        private ResourceManager() { }
-
-        public static ResourceManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    var ob = new GameObject("ResourceManager");
-                    instance = ob.AddComponent<ResourceManager>();
-
-                    if (Application.isPlaying)
-                    {
-                        DontDestroyOnLoad(ob);
-                    }
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// Load resource specified by path synchronously.
@@ -114,7 +89,7 @@ namespace UTK.Runtime.Manager
 
         void Start()
         {
-
+            name = "ResourceManager";
         }
 
         void Update()

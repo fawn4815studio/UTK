@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UTK.Runtime.Common;
 
 namespace UTK.Runtime.AutoStageBuilder
 {
-    public class RuntimeAutoStageBuilderManager : MonoBehaviour
+    public class RuntimeAutoStageBuilderManager : SingletonBase<RuntimeAutoStageBuilderManager>
     {
         /// <summary>
         /// Temporary main prop data to hold information at generation time
@@ -25,32 +26,6 @@ namespace UTK.Runtime.AutoStageBuilder
                 GenerateCount = 0;
             }
         }
-
-        #region Singleton
-
-        private static RuntimeAutoStageBuilderManager instance;
-        private RuntimeAutoStageBuilderManager() { }
-
-        public static RuntimeAutoStageBuilderManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    var ob = new GameObject("RuntimeAutoStageBuilderManager");
-                    instance = ob.AddComponent<RuntimeAutoStageBuilderManager>();
-
-                    if (Application.isPlaying)
-                    {
-                        DontDestroyOnLoad(ob);
-                    }
-                }
-
-                return instance;
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// List of stage data that has been generated.
@@ -90,8 +65,9 @@ namespace UTK.Runtime.AutoStageBuilder
 
         void Start()
         {
-
+            name = "RuntimeAutoStageBuilderManager";
         }
+
         void Update()
         {
 
