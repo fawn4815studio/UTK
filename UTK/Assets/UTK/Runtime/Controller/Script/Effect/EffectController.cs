@@ -6,6 +6,9 @@ using UnityEngine.Events;
 
 namespace UTK.Runtime.Controller.Effect
 {
+    /// <summary>
+    /// Particle controller with the function to process particle system attached to GameObject efficiently.
+    /// </summary>
     public class EffectController : MonoBehaviour
     {
         public bool isAutoDestroy = false;
@@ -42,25 +45,19 @@ namespace UTK.Runtime.Controller.Effect
         {
             get
             {
-                return particles[0].IsAlive(true);
+                return particles.Any(t => t.IsAlive(true));
             }
         }
 
         #endregion
 
 
-        /// <summary>
-        ///  Start is called before the first frame update.
-        /// </summary>
         void Start()
         {
             particles = GetComponentsInChildren<ParticleSystem>(true).ToList();
             renderers = GetComponentsInChildren<Renderer>(true).ToList();
         }
 
-        /// <summary>
-        /// Update is called once per frame.
-        /// </summary>
         void Update()
         {
             if (isAutoDestroy)
@@ -72,12 +69,12 @@ namespace UTK.Runtime.Controller.Effect
             }
         }
 
-        /// <summary>
-        /// Pause effect.
-        /// </summary>
         public void Pause()
         {
-            particles[0].Pause(true);
+            foreach (var p in particles)
+            {
+                p.Pause(true);
+            }
 
             foreach (var r in renderers)
             {
@@ -85,12 +82,12 @@ namespace UTK.Runtime.Controller.Effect
             }
         }
 
-        /// <summary>
-        /// Resume effect.
-        /// </summary>
         public void Resume()
         {
-            particles[0].Play(true);
+            foreach (var p in particles)
+            {
+                p.Play(true);
+            }
 
             foreach (var r in renderers)
             {

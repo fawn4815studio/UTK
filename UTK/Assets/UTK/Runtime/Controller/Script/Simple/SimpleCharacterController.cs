@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace UTK.Runtime.Controller.Simple
 {
+    /// <summary>
+    /// Simple character controller with functions such as move and jump.
+    /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public class SimpleCharacterController : MonoBehaviour
     {

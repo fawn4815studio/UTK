@@ -2,13 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Runtime.Common
+namespace UTK.Runtime
 {
+    /// <summary>
+    /// Resource management data.
+    /// Use through <see cref="Manager.ResourceManager"/>.
+    /// </summary>
     public class ResourceData
     {
         #region Property
+
+        /// <summary>
+        /// Loaded data.
+        /// </summary>
         private Object Data { get; set; } = null;
+
+        /// <summary>
+        /// Resource reference count.
+        /// </summary>
         public int RefCount { get; private set; } = 0;
+
         #endregion
 
         public ResourceData(Object d)

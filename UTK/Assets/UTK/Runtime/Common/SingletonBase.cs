@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UTK.Runtime.Common
+namespace UTK.Runtime
 {
+    /// <summary>
+    /// Singleton template class in Unity.
+    /// Create a gameobject and add a class as a component.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class SingletonBase<T> : MonoBehaviour
         where T : MonoBehaviour
     {

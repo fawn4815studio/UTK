@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace UTK.Runtime.Controller.Simple
 {
+    /// <summary>
+    /// Controller with simple automatic movement and automatic rotation function.
+    /// </summary>
     public class SimpleAutoMoveAndRotateController : MonoBehaviour
     {
         [Serializable]
@@ -26,9 +29,11 @@ namespace UTK.Runtime.Controller.Simple
         private Quaternion initialRot;
 
         #region Property
+
         public ControllerData MoveData { get => moveData; set => moveData = value; }
         public ControllerData RotateData { get => rotateData; set => rotateData = value; }
         public bool IgnoreTimescale { get => ignoreTimescale; set => ignoreTimescale = value; }
+
         #endregion
 
         public void ResetPositionAndRotation()
@@ -39,14 +44,12 @@ namespace UTK.Runtime.Controller.Simple
 
         #region Internal
 
-        // Start is called before the first frame update
         protected void Start()
         {
             initialPos = transform.position;
             initialRot = transform.rotation;
         }
 
-        // Update is called once per frame
         protected void Update()
         {
             var deltaTime = Time.deltaTime;

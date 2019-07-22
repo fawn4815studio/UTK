@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace UTK.Runtime.Controller.Simple
 {
+    /// <summary>
+    /// A simple camera controller with the ability to follow a specific GameObject.
+    /// </summary>
     public class SimpleFollowCameraController : MonoBehaviour
     {
         [SerializeField]
@@ -35,6 +38,7 @@ namespace UTK.Runtime.Controller.Simple
         Vector3 velocity = Vector3.zero;
 
         #region Property
+
         public GameObject Target { get => target; private set => target = value; }
         public Vector3 Offset { get => offset; set => offset = value; }
         public Vector3 Velocity { get => velocity; }
@@ -43,6 +47,7 @@ namespace UTK.Runtime.Controller.Simple
         public bool IgnoreTargetAxisX { get => ignoreTargetAxisX; set => ignoreTargetAxisX = value; }
         public bool IgnoreTargetAxisY { get => ignoreTargetAxisY; set => ignoreTargetAxisY = value; }
         public bool IgnoreTargetAxisZ { get => ignoreTargetAxisZ; set => ignoreTargetAxisZ = value; }
+
         #endregion
 
         public void ChangeTarget(GameObject t)
