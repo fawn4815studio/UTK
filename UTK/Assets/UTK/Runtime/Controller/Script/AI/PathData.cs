@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,26 +9,28 @@ namespace UTK.Runtime.Controller.AI
     /// Path data used by Agent.
     /// Use through <see cref="PathAgentController"/>.
     /// </summary>
+    [Serializable]
     public class PathData
     {
         /// <summary>
         /// 
         /// </summary>
+        [SerializeField]
         private Vector3 position;
 
         /// <summary>
         /// 
         /// </summary>
-        private GameObject target = null;
+        [SerializeField]
+        private float interval;
 
         #region Property
 
         public Vector3 Position { get => position; }
 
-        public GameObject Target { get => target; }
+        public float Interval { get => interval; }
 
         #endregion
-
 
     }
 
