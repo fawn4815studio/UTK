@@ -327,6 +327,12 @@ namespace UTK.Tool.RecentFileViewer
         static bool OnOpenAsset(int instanceID, int line)
         {
             var obj = EditorUtility.InstanceIDToObject(instanceID);
+
+            if (recentFileViewer == null)
+            {
+                Open();
+            }
+
             recentFileViewer.AddAssetToQueueList(obj);
 
             //Since we want to call the original open processing, the result of this function must return false
