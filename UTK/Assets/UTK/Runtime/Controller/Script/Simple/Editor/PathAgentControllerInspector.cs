@@ -13,6 +13,8 @@ namespace UTK.Runtime.Controller.AI
         SerializedProperty goalJudgeRemainingDistance;
         ReorderableList reorderableList;
 
+        float coneSize = 0.5f;
+
         private void OnEnable()
         {
             pathDatas = serializedObject.FindProperty("pathDatas");
@@ -26,7 +28,7 @@ namespace UTK.Runtime.Controller.AI
 
             reorderableList.drawElementCallback = (rect, index, isActive, isFocused) =>
             {
-               
+
                 var element = pathDatas.GetArrayElementAtIndex(index);
                 var position = element.FindPropertyRelative("position");
                 var interval = element.FindPropertyRelative("interval");
@@ -55,6 +57,9 @@ namespace UTK.Runtime.Controller.AI
             goalJudgeRemainingDistance.floatValue = EditorGUILayout.FloatField("goal judge distance", goalJudgeRemainingDistance.floatValue);
             reorderableList.DoLayoutList();
 
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("DEBUG SETTING");
+            coneSize = EditorGUILayout.FloatField("Cone Size", coneSize);
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -66,7 +71,7 @@ namespace UTK.Runtime.Controller.AI
 
             //Draw first element cone.
             Handles.color = Color.yellow;
-            Handles.ConeHandleCap(10, pathDatas.GetArrayElementAtIndex(0).FindPropertyRelative("position").vector3Value + new Vector3(0, 0.3f, 0), Quaternion.Euler(-90, 0, 0), 0.5f, EventType.Repaint);
+            Handles.ConeHandleCap(10, pathDatas.GetArrayElementAtIndex(0).FindPropertyRelative("position").vector3Value + new Vector3(0, 0.3f, 0), Quaternion.Euler(-90, 0, 0), coneSize, EventType.Repaint);
 
             if (size > 1)
             {
@@ -76,7 +81,7 @@ namespace UTK.Runtime.Controller.AI
                     var current = pathDatas.GetArrayElementAtIndex(i).FindPropertyRelative("position");
 
                     Handles.DrawLine(previous.vector3Value, current.vector3Value);
-                    Handles.ConeHandleCap(10, current.vector3Value + new Vector3(0, 0.3f, 0), Quaternion.Euler(-90, 0, 0), 0.5f, EventType.Repaint);
+                    Handles.ConeHandleCap(10, current.vector3Value + new Vector3(0, 0.3f, 0), Quaternion.Euler(-90, 0, 0), coneSize, EventType.Repaint);
                 }
 
                 //Combine first and last.
