@@ -12,6 +12,7 @@ We frequently use Unity in game production. So we started developing UTK to crea
 Open a project in Unity and export UTK as a package.
 
 ※ Do not export the following folders
+
 ・UTK/Config
 
 
