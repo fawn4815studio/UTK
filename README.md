@@ -11,22 +11,20 @@ We frequently use Unity in game production. So we started developing UTK to crea
 
 Open a project in Unity and export UTK as a package.
 
+※ Do not export the following folders
+・UTK/Config
+
+
 3.UTK Tool List
 
 ・ScreenShot Editor
 
 Tool to easily take screenshots
 
-![ScreenShotEditor](https://github.com/fawn4815studio/UTK/blob/master/UTK/Assets/UTK/Images/ScreenShotEditor1.PNG)
+![ScreenShotEditor](https://github.com/fawn4815studio/UTK/blob/master/UTK/Images/ScreenShotEditor.PNG)
 
 ・RecentFileViewer
 
 Tools to easily open recently used scenes and prefabs
 
-![RecentFileViewer](https://github.com/fawn4815studio/UTK/blob/master/UTK/Assets/UTK/Images/RecentFileViewer.PNG)
-
-・AutoStageBuilder
-
-Automatically generate stages based on settings
-
-![AutoStageBuilder](https://github.com/fawn4815studio/UTK/blob/master/UTK/Assets/UTK/Images/AutoStageBuilder.PNG)
+![RecentFileViewer](https://github.com/fawn4815studio/UTK/blob/master/UTK/Images/RecentFileViewer.PNG)
