@@ -21,10 +21,10 @@ Open a project in Unity and export UTK as a package.
 
 Tool to easily take screenshots
 
-![ScreenShotEditor](https://github.com/fawn4815studio/UTK/blob/master/UTK/Images/ScreenShotEditor.PNG)
+![ScreenShotEditor](https://github.com/fawn4815studio/UTK/blob/master/Images/ScreenShotEditor.PNG)
 
 ・RecentFileViewer
 
 Tools to easily open recently used scenes and prefabs
 
-![RecentFileViewer](https://github.com/fawn4815studio/UTK/blob/master/UTK/Images/RecentFileViewer.PNG)
+![RecentFileViewer](https://github.com/fawn4815studio/UTK/blob/master/Images/RecentFileViewer.PNG)
