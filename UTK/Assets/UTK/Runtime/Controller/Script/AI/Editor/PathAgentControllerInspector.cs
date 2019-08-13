@@ -14,9 +14,11 @@ namespace UTK.Runtime.Controller.AI
         ReorderableList reorderableList;
 
         float coneSize = 0.5f;
+        bool autoFocus = false;
 
         private void OnEnable()
         {
+            Tools.hidden = true;
             pathDatas = serializedObject.FindProperty("pathDatas");
             goalJudgeRemainingDistance = serializedObject.FindProperty("goalJudgeRemainingDistance");
 
@@ -48,6 +50,22 @@ namespace UTK.Runtime.Controller.AI
                 var element = pathDatas.GetArrayElementAtIndex(list.index);
             };
 
+            reorderableList.onSelectCallback += (ReorderableList list) =>
+            {
+                var element = pathDatas.GetArrayElementAtIndex(list.index);
+                var pos = element.FindPropertyRelative("position");
+
+                //Focus the scene camera on the selected element.
+                if (autoFocus)
+                {
+                    var view = Tool.Common.ToolUtility.LastActiveView;
+                    if (view != null)
+                    {
+                        view.LookAt(pos.vector3Value);
+                    }
+                }
+            };
+
         }
 
         public override void OnInspectorGUI()
@@ -60,6 +78,22 @@ namespace UTK.Runtime.Controller.AI
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("DEBUG SETTING");
             coneSize = EditorGUILayout.FloatField("Cone Size", coneSize);
+
+            autoFocus = GUILayout.Toggle(autoFocus, "Auto focus on select element");
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                if (GUILayout.Button("Show main gizmo"))
+                {
+                    Tools.hidden = false;
+                }
+
+                if (GUILayout.Button("Hide main gizmo"))
+                {
+                    Tools.hidden = true;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -98,6 +132,16 @@ namespace UTK.Runtime.Controller.AI
                 serializedObject.ApplyModifiedProperties();
             }
 
+        }
+
+        private void OnDisable()
+        {
+            Tools.hidden = false;
+        }
+
+        private void OnDestroy()
+        {
+            Tools.hidden = false;
         }
 
     }
