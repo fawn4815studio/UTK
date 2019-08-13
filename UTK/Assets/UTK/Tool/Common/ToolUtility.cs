@@ -22,6 +22,22 @@ namespace UTK.Tool.Common
         }
 
         /// <summary>
+        /// The Camera that is rendering last active SceneView.
+        /// </summary>
+        public static Camera SceneCamera
+        {
+            get => SceneView.lastActiveSceneView.camera;
+        }
+
+        /// <summary>
+        /// The SceneView that was most recently in focus.
+        /// </summary>
+        public static SceneView LastActiveView
+        {
+            get => SceneView.lastActiveSceneView;
+        }
+
+        /// <summary>
         /// Get asset type from asset file path.
         /// </summary>
         /// <param name="path">Asset file path.</param>
@@ -87,6 +103,7 @@ namespace UTK.Tool.Common
                 AssetDatabase.Refresh();
             }
         }
+
     }
 }
 
