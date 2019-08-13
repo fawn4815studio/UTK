@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   degreeOfProgress: 15
   dropDatas:
-  - dataPath: Test/Cube
+  - dataPath: Cube
     dataId: 012b8f2d287d0ac4da1fc8354565b877
     evaluationValue: 10
     position: {x: 6, y: 0, z: 0}
