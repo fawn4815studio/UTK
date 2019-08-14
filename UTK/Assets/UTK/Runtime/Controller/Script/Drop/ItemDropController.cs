@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UTK.Runtime.Controller.Drop
 {
@@ -21,7 +22,35 @@ namespace UTK.Runtime.Controller.Drop
         /// <summary>
         /// Called when item droped.
         /// </summary>
-        public UnityEngine.Events.UnityAction<ItemDropData> OnItemDrop;
+        public UnityAction<ItemDropData> OnItemDrop;
+
+        /// <summary>
+        /// Called when <see cref="degreeOfProgress"/> increased.
+        /// </summary>
+        public UnityAction<int> OnDegreeOfProgressChanged;
+
+        #endregion
+
+        #region Property
+
+        public int DegreeOfProgress { get => degreeOfProgress; }
+
+        /// <summary>
+        /// Returns the value to drop with the minimum progress in <seealso cref="dropDatas"/>
+        /// </summary>
+        public int MinDropProgressValue
+        {
+            get => dropDatas.Select(t => t.EvaluationValue).Min();
+        }
+
+        /// <summary>
+        /// Returns the value to drop with the maximum progress in <seealso cref="dropDatas"/>
+        /// </summary>
+        public int MaxDropProgressValue
+        {
+            get => dropDatas.Select(t => t.EvaluationValue).Max();
+        }
+
 
         #endregion
 
@@ -31,6 +60,7 @@ namespace UTK.Runtime.Controller.Drop
         public void IncreaseDegreeOfProgress(int value)
         {
             degreeOfProgress += value;
+            OnDegreeOfProgressChanged?.Invoke(degreeOfProgress);
             ItemDrop();
         }
 
