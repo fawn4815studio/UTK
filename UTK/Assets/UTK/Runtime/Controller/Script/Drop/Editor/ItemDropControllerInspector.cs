@@ -29,7 +29,8 @@ namespace UTK.Runtime.Controller.Drop
         ReorderableList reorderableList;
 
         float cubeSize = 0.5f;
-        bool autoFocus = false;
+        bool autoFocus = true;
+        bool copyScale = true;
 
         private void OnEnable()
         {
@@ -122,7 +123,11 @@ namespace UTK.Runtime.Controller.Drop
                 list.index = dropDatas.arraySize - 1;
                 var element = dropDatas.GetArrayElementAtIndex(list.index);
 
-                element.FindPropertyRelative("scale").vector3Value = Vector3.one;
+                if (!copyScale)
+                {
+                    element.FindPropertyRelative("scale").vector3Value = Vector3.one;
+                }
+            
                 serializedObject.ApplyModifiedPropertiesWithoutUndo();
             };
 
@@ -158,6 +163,7 @@ namespace UTK.Runtime.Controller.Drop
             cubeSize = EditorGUILayout.FloatField("Cube Size", cubeSize);
 
             autoFocus = GUILayout.Toggle(autoFocus, "Auto focus on select element");
+            copyScale = GUILayout.Toggle(copyScale, "Inherit the copy source scale value");
 
             EditorGUILayout.BeginHorizontal();
             {
@@ -263,8 +269,6 @@ namespace UTK.Runtime.Controller.Drop
             }
 
             serializedObject.ApplyModifiedProperties();
-            UnityEditor.SceneView.lastActiveSceneView.camera.transform.position = Vector3.zero;
-
         }
 
         private void OnDisable()
