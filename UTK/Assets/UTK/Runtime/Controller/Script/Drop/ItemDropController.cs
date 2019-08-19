@@ -33,6 +33,8 @@ namespace UTK.Runtime.Controller.Drop
 
         #region Property
 
+        public int DropDataCount { get => dropDatas.Count; }
+
         public int DegreeOfProgress { get => degreeOfProgress; }
 
         /// <summary>
