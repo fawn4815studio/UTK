@@ -46,6 +46,7 @@ namespace UTK.Runtime.Manager
                 var d = cacheDic[filepath];
                 d.IncRef();
                 oncomplete?.Invoke(d.GetData<Type>());
+                return;
             }
 
             StartCoroutine(LoadAsyncCo(filepath, oncomplete));
