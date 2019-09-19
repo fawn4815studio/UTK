@@ -52,6 +52,11 @@ namespace UTK.Runtime
             Clip = clip;
         }
 
+        public void Clear()
+        {
+            Clip = null;
+        }
+
     }
 }
 

@@ -70,8 +70,10 @@ namespace UTK.Runtime.Manager
         {
             if (dataDic.ContainsKey(name))
             {
-                ResourceManager.Instance.Unload(dataDic[name].Clip.name);
+                var removecllippath = dataDic[name].FilePath;
+                dataDic[name].Clear();
                 dataDic.Remove(name);
+                ResourceManager.Instance.Unload(removecllippath);
             }
         }
 
