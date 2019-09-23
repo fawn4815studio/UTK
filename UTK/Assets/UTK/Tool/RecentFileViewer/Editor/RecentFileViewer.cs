@@ -36,6 +36,8 @@ namespace UTK.Tool.RecentFileViewer
         Vector2 sceneScrollPos;
         Vector2 prefabScrollPos;
 
+        string sceneaPathBeforePlayMode = null;
+
         public void AddSceneToQueueList(Scene scene)
         {
             //Check if already registered in list.
@@ -234,19 +236,21 @@ namespace UTK.Tool.RecentFileViewer
                 config.QueueLimit = EditorGUILayout.IntField("Queue limit", config.QueueLimit, GUILayout.Width(250));
             }
         }
-   
+
         void RegisterEvent()
         {
             if (isRegisterEvent) return;
             isRegisterEvent = true;
             PrefabUtility.prefabInstanceUpdated += OnPrefabUpdated;
             EditorSceneManager.sceneOpened += OnSceneOpened;
+            EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
         }
 
         void RemoveEvent()
         {
             PrefabUtility.prefabInstanceUpdated -= OnPrefabUpdated;
             EditorSceneManager.sceneOpened -= OnSceneOpened;
+            EditorApplication.playModeStateChanged -= EditorApplication_playModeStateChanged;
             isRegisterEvent = false;
         }
 
@@ -288,11 +292,21 @@ namespace UTK.Tool.RecentFileViewer
 
                         break;
                     }
+
                     if (GUILayout.Button("Select", GUILayout.Width(100)))
                     {
                         var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(p.Path);
                         if (obj) EditorGUIUtility.PingObject(obj);
                         break;
+                    }
+
+                    if (ToolUtility.GetAssetType(p.Path) == ToolUtility.AssetType.Scene && GUILayout.Button("Play", GUILayout.Width(100)))
+                    {
+                        var tempscene = SceneManager.GetActiveScene().path;
+                        EditorSceneManager.OpenScene(p.Path);
+                        EditorApplication.ExecuteMenuItem("Edit/Play");
+                        sceneaPathBeforePlayMode = tempscene;
+                        return;
                     }
                 }
                 EditorGUILayout.EndHorizontal();
@@ -311,6 +325,23 @@ namespace UTK.Tool.RecentFileViewer
                     datas.Add(s);
                 }
             }
+        }
+
+        void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
+        {
+            if (obj == PlayModeStateChange.ExitingPlayMode && sceneaPathBeforePlayMode != null)
+            {
+                //Since OpenScene cannot be called at the end frame of play mode, open the scene after delaying one frame.
+                EditorApplication.delayCall += () =>
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        EditorSceneManager.OpenScene(sceneaPathBeforePlayMode);
+                        sceneaPathBeforePlayMode = null;
+                    };
+                };
+            }
+
         }
 
         static void OnSceneOpened(Scene scene, OpenSceneMode mode)
