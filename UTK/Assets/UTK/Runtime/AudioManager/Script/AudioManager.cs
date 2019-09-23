@@ -11,6 +11,7 @@ namespace UTK.Runtime.Manager
     {
         private AudioSource bgmSource;
         private Dictionary<string, AudioData> dataDic = new Dictionary<string, AudioData>();
+        private Dictionary<string, AudioSource> sePointDic = new Dictionary<string, AudioSource>();
 
         /// <summary>
         /// Load audio data specified by path synchronously.
@@ -113,6 +114,68 @@ namespace UTK.Runtime.Manager
             {
                 bgmSource.Stop();
             }
+        }
+
+        /// <summary>
+        /// Create new se point.
+        /// </summary>
+        /// <param name="name">Point name.</param>
+        /// <param name="pos">Point pos.</param>
+        /// <param name="secount">Number of AudioSources to create.</param>
+        public void CreateSePoint(string name, Vector3 pos)
+        {
+            if (sePointDic.ContainsKey(name))
+            {
+                Debug.LogWarning(string.Format("{0} se point already exists.", name));
+                return;
+            }
+
+            var ob = new GameObject(name);
+            ob.transform.position = pos;
+            ob.transform.parent = transform;
+            sePointDic[name] = ob.AddComponent<AudioSource>();
+        }
+
+        /// <summary>
+        /// Delete se point.
+        /// </summary>
+        /// <param name="name">Delete se point name.</param>
+        public void DeleteSePoint(string name)
+        {
+            if (!sePointDic.ContainsKey(name))
+            {
+                Debug.LogWarning(string.Format("{0} se point not exists.", name));
+                return;
+            }
+
+            Destroy(sePointDic[name].gameObject);
+            sePointDic[name] = null;
+            sePointDic.Remove(name);
+        }
+
+        /// <summary>
+        /// Play se.
+        /// </summary>
+        /// <param name="name">Se name.</param>
+        /// <param name="point">Se point name.</param>
+        public void PlaySe(string name, string point)
+        {
+            if (!sePointDic.ContainsKey(point))
+            {
+                Debug.LogWarning(string.Format("{0} se point not exists.", name));
+                return;
+            }
+
+            if (!dataDic.ContainsKey(name))
+            {
+                Debug.LogWarning(string.Format("Failed play bgm. {0} not loaded.", name));
+                return;
+            }
+
+            var data = dataDic[name];
+            var source = sePointDic[point];
+
+            source.PlayOneShot(data.Clip, data.VolumeScale);
         }
 
         #region Internal
