@@ -85,7 +85,7 @@ namespace UTK.Runtime.Controller.Simple
 
         #region Internal
 
-        void Start()
+        protected virtual void Start()
         {
             if (target != null)
             {
@@ -93,7 +93,7 @@ namespace UTK.Runtime.Controller.Simple
             }
         }
 
-        void Update()
+        protected virtual void Update()
         {
             if (!IsLateUpdate)
             {
@@ -101,7 +101,7 @@ namespace UTK.Runtime.Controller.Simple
             }
         }
 
-        void LateUpdate()
+        protected virtual void LateUpdate()
         {
             if (IsLateUpdate)
             {
