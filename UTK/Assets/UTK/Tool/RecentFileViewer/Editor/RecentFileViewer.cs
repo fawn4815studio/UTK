@@ -336,6 +336,7 @@ namespace UTK.Tool.RecentFileViewer
                 {
                     EditorApplication.delayCall += () =>
                     {
+                        if (sceneaPathBeforePlayMode == null || sceneaPathBeforePlayMode.Equals(string.Empty)) return;
                         EditorSceneManager.OpenScene(sceneaPathBeforePlayMode);
                         sceneaPathBeforePlayMode = null;
                     };
