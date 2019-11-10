@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,26 +35,62 @@ namespace UTK.Runtime.Controller.Simple
         [SerializeField]
         bool ignoreTargetAxisZ = false;
 
-        Vector3 initialPos;
+        [SerializeField]
+        Vector3[] offsetArray;
+
+        [SerializeField]
+        uint offsetIndex;
+
+        [SerializeField]
+        float offsetSmoothTime;
+
+        Vector3 initialPos = Vector3.zero;
         Vector3 velocity = Vector3.zero;
+
+        bool isOffsetSmoothing = false;
+        float tempOffsetSmoothTime = 0.0f;
+        Vector3 tempOffset = Vector3.zero;
 
         #region Property
 
         public GameObject Target { get => target; private set => target = value; }
-        public Vector3 Offset { get => offset; set => offset = value; }
-        public Vector3 Velocity { get => velocity; }
-        public bool IsLateUpdate { get => isLateUpdate; set => isLateUpdate = value; }
-        public bool EnableLookAt { get => enableLookAt; set => enableLookAt = value; }
-        public bool IgnoreTargetAxisX { get => ignoreTargetAxisX; set => ignoreTargetAxisX = value; }
-        public bool IgnoreTargetAxisY { get => ignoreTargetAxisY; set => ignoreTargetAxisY = value; }
-        public bool IgnoreTargetAxisZ { get => ignoreTargetAxisZ; set => ignoreTargetAxisZ = value; }
+        public Vector3 Offset { get => offset; private set => offset = value; }
+        public Vector3 Velocity { get => velocity; private set => velocity = value; }
+        public float SmoothTime { get => smoothTime; protected set => smoothTime = value; }
+        public bool IsLateUpdate { get => isLateUpdate; protected set => isLateUpdate = value; }
+        public bool EnableLookAt { get => enableLookAt; protected set => enableLookAt = value; }
+        public bool IgnoreTargetAxisX { get => ignoreTargetAxisX; protected set => ignoreTargetAxisX = value; }
+        public bool IgnoreTargetAxisY { get => ignoreTargetAxisY; protected set => ignoreTargetAxisY = value; }
+        public bool IgnoreTargetAxisZ { get => ignoreTargetAxisZ; protected set => ignoreTargetAxisZ = value; }
 
         #endregion
 
-        public void ChangeTarget(GameObject t)
+        public virtual void ChangeTarget(GameObject t)
         {
             target = t;
             initialPos = t.transform.position + offset;
+        }
+
+        public virtual void ChangeOffsetSmoothlyUsingArray(bool next, Action oncomplete = null)
+        {
+            if (offsetArray.Length == 0 || isOffsetSmoothing) return;
+
+            if (next)
+            {
+                ++offsetIndex;
+                if (offsetIndex > offsetArray.Length - 1) offsetIndex = 0;
+            }
+            else
+            {
+                --offsetIndex;
+                if (offsetIndex < 0) offsetIndex = (uint)offsetArray.Length - 1;
+            }
+
+            tempOffset = offsetArray[offsetIndex];
+            isOffsetSmoothing = true;
+            tempOffsetSmoothTime = 1.0f / (offsetSmoothTime * 10.0f); //Vector3.Lerp takes the range of 0-1 seconds, adjust the value.
+
+            StartCoroutine(UpdateOffsetEndCo(oncomplete));
         }
 
         #region Editor
@@ -98,6 +135,11 @@ namespace UTK.Runtime.Controller.Simple
             if (!IsLateUpdate)
             {
                 Move();
+
+                if (isOffsetSmoothing)
+                {
+                    UpdateOffset();
+                }
             }
         }
 
@@ -106,6 +148,11 @@ namespace UTK.Runtime.Controller.Simple
             if (IsLateUpdate)
             {
                 Move();
+
+                if (isOffsetSmoothing)
+                {
+                    UpdateOffset();
+                }
             }
         }
 
@@ -125,6 +172,22 @@ namespace UTK.Runtime.Controller.Simple
             {
                 transform.LookAt(target.transform);
             }
+        }
+
+        void UpdateOffset()
+        {
+            offset = Vector3.Lerp(offset, tempOffset, tempOffsetSmoothTime);
+        }
+
+        IEnumerator UpdateOffsetEndCo(Action oncomplete)
+        {
+            yield return new WaitForSeconds(offsetSmoothTime);
+
+            isOffsetSmoothing = false;
+            offset = tempOffset;
+            tempOffset = Vector3.zero;
+            tempOffsetSmoothTime = 0.0f;
+            oncomplete?.Invoke();
         }
 
         #endregion
