@@ -104,6 +104,14 @@ namespace UTK.Tool.Common
             }
         }
 
+        /// <summary>
+        /// Reset scene selections.
+        /// </summary>
+        public static void ResetSelection()
+        {
+            Selection.activeObject = null;
+            Selection.objects = null;
+        }
     }
 }
 
