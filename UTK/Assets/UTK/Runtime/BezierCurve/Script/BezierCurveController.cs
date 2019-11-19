@@ -18,6 +18,10 @@ namespace UTK.Runtime.BezierCurve
         [SerializeField]
         private int segment;
 
+        [SerializeField]
+        private bool autoLookDirection;
+
+
         private class RuntimePoint
         {
             public Vector3 Point;
@@ -26,7 +30,7 @@ namespace UTK.Runtime.BezierCurve
             public float Distance;
             public float TotalTime;
             public float TotalDistance;
-
+            public Quaternion Rot;
         }
 
         private List<RuntimePoint> runtimePoints = new List<RuntimePoint>();
@@ -50,6 +54,7 @@ namespace UTK.Runtime.BezierCurve
             RuntimePoint previous = null, current = null;
             float min, max;
             Vector3 minpos, maxpos;
+            Quaternion minrot, maxrot;
 
             foreach (var p in runtimePoints)
             {
@@ -84,6 +89,9 @@ namespace UTK.Runtime.BezierCurve
 
                 minpos = Vector3.zero;
                 maxpos = current.Point;
+
+                minrot = transform.rotation;
+                maxrot = current.Rot;
             }
             else
             {
@@ -92,11 +100,20 @@ namespace UTK.Runtime.BezierCurve
 
                 minpos = previous.Point;
                 maxpos = current.Point;
+
+                minrot = previous.Rot;
+                maxrot = current.Rot;
             }
 
             //Map to 0-1 range.
             var div = (Mathf.Clamp(elapsedTime, min, max) - min) / (max - min);
             var newpos = Vector3.Slerp(minpos, maxpos, div);
+            var newrot = Quaternion.Slerp(minrot, maxrot, div);
+
+            if (autoLookDirection && !newrot.Equals(Quaternion.identity) && !float.IsNaN(newrot.x))
+            {
+                transform.rotation = newrot;
+            }
 
             if (!float.IsNaN(newpos.x))
             {
@@ -121,6 +138,17 @@ namespace UTK.Runtime.BezierCurve
                 rp.Distance = i == 0 ? 0 : Vector3.Distance(vecpoints[i - 1], vecpoints[i]);
                 totaldistance += rp.Distance;
                 rp.TotalDistance = totaldistance;
+
+                if (i == 0)
+                {
+                    rp.Rot = transform.rotation;
+                }
+                else
+                {
+                    var diff = vecpoints[i] - vecpoints[i - 1];
+                    rp.Rot = diff.Equals(Vector3.zero) ? runtimePoints[i - 1].Rot : Quaternion.LookRotation(diff);
+                }
+
                 runtimePoints.Add(rp);
 
                 /*
@@ -129,6 +157,7 @@ namespace UTK.Runtime.BezierCurve
                     Debug.DrawLine(runtimePoints[i - 1].Point, runtimePoints[i].Point, Color.blue, 100.0f);
                 }
                 */
+
             }
 
             var averagespeed = totaldistance / time;

@@ -17,6 +17,7 @@ namespace UTK.Runtime.BezierCurve
         SerializedProperty loop;
         SerializedProperty time;
         SerializedProperty segment;
+        SerializedProperty autoLookDirection;
         ReorderableList reorderableList;
 
         private class PreviewPoint
@@ -242,6 +243,9 @@ namespace UTK.Runtime.BezierCurve
 
             segment = serializedObject.FindProperty("segment");
             segment.intValue = EditorGUILayout.IntField("Path segment", segment.intValue);
+
+            autoLookDirection = serializedObject.FindProperty("autoLookDirection");
+            autoLookDirection.boolValue = EditorGUILayout.Toggle("Auto rotate", autoLookDirection.boolValue);
 
             reorderableList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
