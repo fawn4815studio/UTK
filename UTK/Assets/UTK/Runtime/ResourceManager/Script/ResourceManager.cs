@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace UTK.Runtime.Manager
     /// <summary>
     /// ResourceManager can not load AssetBundle. Use AssetBundleManager to load AssetBundle.
     /// </summary>
+    [Obsolete("Use AssetManager instead")]
     public class ResourceManager : SingletonBase<ResourceManager>
     {
         private Dictionary<string, ResourceData> cacheDic = new Dictionary<string, ResourceData>();

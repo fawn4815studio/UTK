@@ -17,14 +17,14 @@ namespace UTK.Runtime.Manager
         /// Load audio data specified by path synchronously.
         /// </summary>
         /// <param name="name">Register audio data name.</param>
-        /// <param name="filepath"><see cref="AudioClip"/> file path.</param>
+        /// <param name="assetname"><see cref="AudioClip"/> name.</param>
         /// <param name="loop">Is loop.</param>
         /// <param name="volume">Audio volume.</param>
-        public void LoadSync(string name, string filepath, bool loop = false, float volume = 1.0f)
+        public void LoadSync(string name, string assetname, bool loop = false, float volume = 1.0f)
         {
             if (!dataDic.ContainsKey(name))
             {
-                dataDic[name] = new AudioData(name, filepath, ResourceManager.Instance.LoadSync<AudioClip>(filepath))
+                dataDic[name] = new AudioData(name, assetname, AssetManager.Instance.LoadSync<AudioClip>(assetname))
                 {
                     IsLoop = loop,
                     Volume = volume
@@ -40,16 +40,16 @@ namespace UTK.Runtime.Manager
         /// Load audio data specified by path asynchronously.
         /// </summary>
         /// <param name="name">Register audio data name.</param>
-        /// <param name="filepath"><see cref="AudioClip"/> file path.</param>
+        /// <param name="assetname"><see cref="AudioClip"/> name.</param>
         /// <param name="loop">Is loop.</param>
         /// <param name="volume">Audio volume.</param>
-        public void LoadAsync(string name, string filepath, bool loop = false, float volume = 1.0f)
+        public void LoadAsync(string name, string assetname, bool loop = false, float volume = 1.0f)
         {
             if (!dataDic.ContainsKey(name))
             {
-                ResourceManager.Instance.LoadAsync(filepath, (AudioClip clip) =>
+                AssetManager.Instance.LoadAsync(assetname, (AudioClip clip) =>
                 {
-                    dataDic[name] = new AudioData(name, filepath, clip)
+                    dataDic[name] = new AudioData(name, assetname, clip)
                     {
                         IsLoop = loop,
                         Volume = volume
@@ -71,10 +71,10 @@ namespace UTK.Runtime.Manager
         {
             if (dataDic.ContainsKey(name))
             {
-                var removecllippath = dataDic[name].FilePath;
+                var removecllippath = dataDic[name].AssetName;
                 dataDic[name].Clear();
                 dataDic.Remove(name);
-                ResourceManager.Instance.Unload(removecllippath);
+                AssetManager.Instance.Unload(removecllippath);
             }
         }
 

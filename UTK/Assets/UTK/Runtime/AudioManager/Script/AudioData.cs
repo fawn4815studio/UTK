@@ -12,7 +12,7 @@ namespace UTK.Runtime
     {
         #region Property
 
-        public string FilePath { get; private set; }
+        public string AssetName { get; private set; }
 
         public string Name { get; private set; }
 
@@ -43,11 +43,11 @@ namespace UTK.Runtime
         /// Constructor.
         /// </summary>
         /// <param name="name">Audio data name.</param>
-        /// <param name=""><see cref="AudioClip"/> file path.</param>
+        /// <param name=""><see cref="AudioClip"/> name.</param>
         /// <param name="clip"><see cref="AudioClip"/> instance.</param>
-        public AudioData(string name, string filepath, AudioClip clip)
+        public AudioData(string name, string assetname, AudioClip clip)
         {
-            FilePath = filepath;
+            AssetName = assetname;
             Name = name;
             Clip = clip;
         }

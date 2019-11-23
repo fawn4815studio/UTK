@@ -84,7 +84,7 @@ namespace UTK.Runtime.Controller.Drop
             var items = dropDatas.Where(t => !t.IsDrop && t.EvaluationValue <= degreeOfProgress);
             foreach (var i in items)
             {
-                Manager.ResourceManager.Instance.LoadAsync(i.DataPath, (GameObject prefab) =>
+                Manager.AssetManager.Instance.LoadAsync(i.DataPath, (GameObject prefab) =>
                 {
                     OnCompleteLoad(prefab, i);
                 });
