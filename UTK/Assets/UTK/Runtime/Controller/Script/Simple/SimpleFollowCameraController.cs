@@ -36,13 +36,13 @@ namespace UTK.Runtime.Controller.Simple
         bool ignoreTargetAxisZ = false;
 
         [SerializeField]
-        Vector3[] offsetArray;
+        Vector3[] offsetArray = null;
 
         [SerializeField]
         uint offsetIndex;
 
         [SerializeField]
-        float offsetSmoothTime;
+        float offsetSmoothTime = 0.0f;
 
         Vector3 initialPos = Vector3.zero;
         Vector3 velocity = Vector3.zero;

@@ -16,13 +16,13 @@ namespace UTK.Runtime.Controller.AI
         /// 
         /// </summary>
         [SerializeField]
-        private Vector3 position;
+        private Vector3 position = Vector3.zero;
 
         /// <summary>
         /// 
         /// </summary>
         [SerializeField]
-        private float interval;
+        private float interval = 0.0f;
 
         #region Property
 

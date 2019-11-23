@@ -15,7 +15,7 @@ namespace UTK.Runtime.Controller.Drop
         private int degreeOfProgress;
 
         [SerializeField]
-        private List<ItemDropData> dropDatas;
+        private List<ItemDropData> dropDatas = null;
 
         #region Event
 

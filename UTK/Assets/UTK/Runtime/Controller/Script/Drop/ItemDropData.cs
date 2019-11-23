@@ -16,28 +16,28 @@ namespace UTK.Runtime.Controller.Drop
         /// Must be a prefab path located Resources folder or must be single asset bundle name.
         /// </summary>
         [SerializeField]
-        private string dataPath;
+        private string dataPath = null;
 
         /// <summary>
         /// A unique id stored in metadata.
         /// </summary>
         [SerializeField]
-        private string dataId;
+        private string dataId = null;
 
         /// <summary>
         /// Reference value to place
         /// </summary>
         [SerializeField]
-        private int evaluationValue;
+        private int evaluationValue = 0;
 
         [SerializeField]
-        private Vector3 position;
+        private Vector3 position = Vector3.zero;
 
         [SerializeField]
-        private Quaternion rotation;
+        private Quaternion rotation = Quaternion.identity;
 
         [SerializeField]
-        private Vector3 scale;
+        private Vector3 scale = Vector3.zero;
 
         #region Property
 

@@ -7,19 +7,19 @@ namespace UTK.Runtime.BezierCurve
     public class BezierCurveController : MonoBehaviour
     {
         [SerializeField]
-        private List<BezierPoint> points;
+        private List<BezierPoint> points = null;
 
         [SerializeField]
-        private bool loop;
+        private bool loop = false;
 
         [SerializeField]
-        private float time;
+        private float time = 0.0f;
 
         [SerializeField]
-        private int segment;
+        private int segment = 0;
 
         [SerializeField]
-        private bool autoLookDirection;
+        private bool autoLookDirection = false;
 
 
         private class RuntimePoint

@@ -13,7 +13,7 @@ namespace UTK.Runtime.Controller.AI
     public class PathAgentController : MonoBehaviour
     {
         [SerializeField]
-        private List<PathData> pathDatas;
+        private List<PathData> pathDatas = null;
 
         [SerializeField]
         private float goalJudgeRemainingDistance = 0.5f;
