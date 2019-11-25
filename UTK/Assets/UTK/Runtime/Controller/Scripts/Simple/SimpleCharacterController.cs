@@ -23,6 +23,13 @@ namespace UTK.Runtime.Controller.Simple
         protected Vector3 moveDirection;
 
         [SerializeField]
+        protected bool lookDirection;
+
+        [SerializeField]
+        [Range(0, 1)]
+        protected float lookClampedRange;
+
+        [SerializeField]
         [Header("Adapts to changes in the move direction even during jumps.")]
         protected bool enableJumpingMove;
 
@@ -68,8 +75,9 @@ namespace UTK.Runtime.Controller.Simple
 
         #endregion
 
-        public void OnJump()
+        public void StartJump()
         {
+            if (IsJumping) return;
             isReadyJump = true;
         }
 
@@ -103,7 +111,7 @@ namespace UTK.Runtime.Controller.Simple
 
                 if (isReadyJump)
                 {
-                    isReadyJump = true;
+                    isReadyJump = false;
                     currentDirection.y = jumpSpeed;
                 }
             }
@@ -121,6 +129,11 @@ namespace UTK.Runtime.Controller.Simple
             //MS ^ -2
             currentDirection.y -= gravity * Time.deltaTime;
             controller.Move(currentDirection * Time.deltaTime);
+
+            if (lookDirection && moveDirection.magnitude != 0)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), lookClampedRange);
+            }
         }
 
         #endregion
