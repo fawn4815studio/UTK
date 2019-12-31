@@ -14,7 +14,7 @@ namespace UTK.Runtime.Manager
     /// Class that manages loading and unloading of assets(resource).
     /// Processes by absorbing differences such as asset bundles and resources.
     /// </summary>
-    public class AssetManager : SingletonBase<AssetManager>
+    public sealed class AssetManager : SingletonBase<AssetManager>
     {
         private Dictionary<string, AssetData> cacheDic = new Dictionary<string, AssetData>();
 

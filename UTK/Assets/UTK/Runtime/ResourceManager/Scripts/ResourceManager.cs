@@ -9,7 +9,7 @@ namespace UTK.Runtime.Manager
     /// ResourceManager can not load AssetBundle. Use AssetBundleManager to load AssetBundle.
     /// </summary>
     [Obsolete("Use AssetManager instead")]
-    public class ResourceManager : SingletonBase<ResourceManager>
+    public sealed class ResourceManager : SingletonBase<ResourceManager>
     {
         private Dictionary<string, ResourceData> cacheDic = new Dictionary<string, ResourceData>();
 

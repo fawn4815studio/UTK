@@ -7,7 +7,7 @@ namespace UTK.Runtime.Manager
     /// <summary>
     /// Manager class for managing audio loading, playback, etc.
     /// </summary>
-    public class AudioManager : SingletonBase<AudioManager>
+    public sealed class AudioManager : SingletonBase<AudioManager>
     {
         private AudioSource bgmSource;
         private Dictionary<string, AudioData> dataDic = new Dictionary<string, AudioData>();
@@ -180,7 +180,7 @@ namespace UTK.Runtime.Manager
 
         #region Internal
 
-        protected void Start()
+        void Start()
         {
             name = "AudioManager";
 
@@ -190,7 +190,7 @@ namespace UTK.Runtime.Manager
             }
         }
 
-        protected void Update()
+        void Update()
         {
 
         }
