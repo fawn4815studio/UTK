@@ -168,7 +168,7 @@ namespace UTK.Runtime.Manager
 
             if (!dataDic.ContainsKey(name))
             {
-                Debug.LogWarning(string.Format("Failed play bgm. {0} not loaded.", name));
+                Debug.LogWarning(string.Format("Failed play se. {0} not loaded.", name));
                 return;
             }
 
@@ -180,7 +180,7 @@ namespace UTK.Runtime.Manager
 
         #region Internal
 
-        void Start()
+        protected void Start()
         {
             name = "AudioManager";
 
@@ -190,7 +190,7 @@ namespace UTK.Runtime.Manager
             }
         }
 
-        void Update()
+        protected void Update()
         {
 
         }
