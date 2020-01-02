@@ -178,7 +178,7 @@ namespace UTK.Runtime.Controller.Wave
             var points = element.FindPropertyRelative("points");
 
             reorderableList = new ReorderableList(serializedObject, points);
-            reorderableList.elementHeight = 200;
+            reorderableList.elementHeight = 220;
 
             reorderableList.drawHeaderCallback = (rect) =>
                      EditorGUI.LabelField(rect, element.FindPropertyRelative("name").stringValue);
@@ -196,6 +196,7 @@ namespace UTK.Runtime.Controller.Wave
                 var delayeffect = drawelement.FindPropertyRelative("delayEffect");
                 var delaytime = drawelement.FindPropertyRelative("delayTime");
                 var ignorecount = drawelement.FindPropertyRelative("ignoreCount");
+                var raycastoffset = drawelement.FindPropertyRelative("raycastOffset");
 
                 rect.y += 20;
                 rect.height = EditorGUIUtility.singleLineHeight;
@@ -214,29 +215,33 @@ namespace UTK.Runtime.Controller.Wave
                 }
 
                 rect.y += 20;
-                rect.height = EditorGUIUtility.singleLineHeight;
                 spawneffect.stringValue = EditorGUI.TextField(rect, "Spawn Effect", spawneffect.stringValue);
 
                 rect.y += 20;
-                rect.height = EditorGUIUtility.singleLineHeight;
                 data.stringValue = EditorGUI.TextField(rect, "Data", data.stringValue);
 
                 rect.y += 20;
-                rect.height = EditorGUIUtility.singleLineHeight;
                 position.vector3Value = EditorGUI.Vector3Field(rect, "Data Position", position.vector3Value);
 
                 rect.y += 20;
-                rect.height = EditorGUIUtility.singleLineHeight;
                 rot.quaternionValue = Quaternion.Euler(EditorGUI.Vector3Field(rect, "Data Rotation", rot.quaternionValue.eulerAngles));
 
-                rect.y += 20;
-                rect.height = EditorGUIUtility.singleLineHeight;
+                var defaultrectwidth = rect.width;
                 rect.width = 120;
+
+                rect.y += 20;
                 raycastGround.boolValue = EditorGUI.ToggleLeft(rect, "Raycast Ground", raycastGround.boolValue);
 
                 rect.x += 120;
-                rect.width = 120;
                 ignorecount.boolValue = EditorGUI.ToggleLeft(rect, "Ignore Count", ignorecount.boolValue);
+
+                if (raycastGround.boolValue)
+                {
+                    rect.y += 20;
+                    rect.x -= 120;
+                    rect.width = defaultrectwidth;
+                    raycastoffset.vector3Value = EditorGUI.Vector3Field(rect, "Raycast Offset", raycastoffset.vector3Value);
+                }
             };
 
             reorderableList.onAddCallback += (list) =>

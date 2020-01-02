@@ -11,6 +11,12 @@ namespace UTK.Runtime.Controller.Wave
     /// </summary>
     public class WaveController : MonoBehaviour
     {
+        public enum PriorityOption
+        {
+            Greater,
+            Equal
+        };
+
         [SerializeField]
         private WaveData[] waveDatas;
 
@@ -34,7 +40,7 @@ namespace UTK.Runtime.Controller.Wave
         public event System.Action OnWaveComplete;
 
         /// <summary>
-        /// Callled when data added.
+        /// Called when data added.
         /// </summary>
         public System.Action<int> OnDataAdd;
 
@@ -65,11 +71,22 @@ namespace UTK.Runtime.Controller.Wave
         /// </summary>
         /// <param name="priority">Reference priority.</param>
         /// <param name="matchname">If specified, only waves with matching names will be played.</param>
-        public void AdvanceWave(int priority, string matchname = null)
+        public void AdvanceWave(int priority, PriorityOption option, string matchname = null)
         {
             CurrentPriority = priority;
 
-            var waves = waveDatas.Where(t => t.Priority >= priority);
+            IEnumerable<WaveData> waves = null;
+            switch (option)
+            {
+                case PriorityOption.Greater:
+                    waves = waveDatas.Where(t => t.Priority <= priority);
+                    break;
+
+                case PriorityOption.Equal:
+                    waves = waveDatas.Where(t => t.Priority == priority);
+                    break;
+            }
+
 
             foreach (var w in waves)
             {
@@ -87,6 +104,15 @@ namespace UTK.Runtime.Controller.Wave
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the number of wave less than or equal to the priority.
+        /// </summary>
+        /// <param name="priority">Wave priority.</param>
+        public int GetWaveCount(int priority)
+        {
+            return waveDatas.Count(t => t.Priority >= priority);
         }
 
         /// <summary>
@@ -125,7 +151,7 @@ namespace UTK.Runtime.Controller.Wave
 
                 preloadObjects.Clear();
             }
-           
+
         }
 
         /// <summary>
@@ -217,8 +243,8 @@ namespace UTK.Runtime.Controller.Wave
                 switch (p.Spawn)
                 {
                     case WaveData.WavePoint.SpawnType.Immediately:
-                        p.SpawnEffectObject = InstantiateObject(p.SpawnEffect, false, p.RaycastGround, false, p.Position, Quaternion.identity);
-                        p.DataObject = InstantiateObject(p.Data, true, p.RaycastGround, !(p.IgnoreCount), p.Position, p.Rot);
+                        p.SpawnEffectObject = InstantiateObject(p.SpawnEffect, false, p.RaycastGround, false, p.Position, Quaternion.identity, p.RaycastOffset);
+                        p.DataObject = InstantiateObject(p.Data, true, p.RaycastGround, !(p.IgnoreCount), p.Position, p.Rot, p.RaycastOffset);
                         break;
 
                     case WaveData.WavePoint.SpawnType.Delay:
@@ -239,7 +265,7 @@ namespace UTK.Runtime.Controller.Wave
             });
         }
 
-        GameObject InstantiateObject(string name, bool applyrot, bool raycastground, bool attachsender, Vector3 pos, Quaternion rot)
+        GameObject InstantiateObject(string name, bool applyrot, bool raycastground, bool attachsender, Vector3 pos, Quaternion rot, Vector3 raycastoffset)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -254,13 +280,14 @@ namespace UTK.Runtime.Controller.Wave
                 if (Physics.Raycast(waveRoot.transform.TransformPoint(pos), Vector3.down, out hit, 100.0f))
                 {
                     pos = hit.point;
+                    pos += raycastoffset;
                 }
             }
 
             ob = preloadObjects.ContainsKey(name) ? Instantiate(preloadObjects[name]) : Instantiate(AssetManager.Instance.LoadSync<GameObject>(name));
             ob.transform.SetParent(waveRoot.transform);
-            ob.transform.position = Vector3.zero;
-            ob.transform.localPosition = pos;
+            ob.transform.position = pos;
+            ob.transform.localPosition = waveRoot.transform.InverseTransformPoint(ob.transform.position);
 
             if (applyrot)
             {
@@ -279,14 +306,13 @@ namespace UTK.Runtime.Controller.Wave
 
         IEnumerator DelaySpawn(WaveData.WavePoint p)
         {
-            //Spawn delay effect.
-            p.DelayEffectObject = InstantiateObject(p.DelayEffect, false, p.RaycastGround, false, p.Position, Quaternion.identity);
+            p.DelayEffectObject = InstantiateObject(p.DelayEffect, false, p.RaycastGround, false, p.Position, Quaternion.identity, p.RaycastOffset);
 
             yield return new WaitForSeconds(p.DelayTime);
             Destroy(p.DelayEffectObject);
 
-            p.SpawnEffectObject = InstantiateObject(p.SpawnEffect, false, p.RaycastGround, false, p.Position, Quaternion.identity);
-            p.DataObject = InstantiateObject(p.Data, true, p.RaycastGround, !(p.IgnoreCount), p.Position, p.Rot);
+            p.SpawnEffectObject = InstantiateObject(p.SpawnEffect, false, p.RaycastGround, false, p.Position, Quaternion.identity, p.RaycastOffset);
+            p.DataObject = InstantiateObject(p.Data, true, p.RaycastGround, !(p.IgnoreCount), p.Position, p.Rot, p.RaycastOffset);
         }
 
         #endregion

@@ -46,11 +46,15 @@ namespace UTK.Runtime.Controller.Wave
             [SerializeField]
             private float delayTime;
 
+
             /// <summary>
             /// Whether to count as enemy.(True = Not count)
             /// </summary>
             [SerializeField]
             private bool ignoreCount = false;
+
+            [SerializeField]
+            private Vector3 raycastOffset;
 
             public string Data { get => data; }
             public Vector3 Position { get => position; }
@@ -65,6 +69,7 @@ namespace UTK.Runtime.Controller.Wave
             public GameObject SpawnEffectObject { get; set; } = null;
             public GameObject DataObject { get; set; } = null;
             public bool IgnoreCount { get => ignoreCount; }
+            public Vector3 RaycastOffset { get => raycastOffset; set => raycastOffset = value; }
         }
 
         /// <summary>
