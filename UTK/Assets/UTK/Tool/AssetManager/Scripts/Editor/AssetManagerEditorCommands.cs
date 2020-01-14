@@ -37,7 +37,15 @@ namespace UTK.Tool.AssetManager
                     {
                         Uri relativeuri = baseuri.MakeRelativeUri(new Uri(a.FullName));
                         AssetImporter importer = AssetImporter.GetAtPath(relativeuri.OriginalString); //Get the relative path for searching AssetImporter.
-                        importer.assetBundleName = remove ? string.Empty : System.IO.Path.GetFileNameWithoutExtension(a.Name) + ".ab";
+                        if (importer != null)
+                        {
+                            importer.assetBundleName = remove ? string.Empty : System.IO.Path.GetFileNameWithoutExtension(a.Name) + ".ab";
+                        }
+                        else
+                        {
+                            Debug.LogWarning(string.Format("Invalid asset name found : {0}", relativeuri.OriginalString));
+                        }
+
                     }
                 }
             }
