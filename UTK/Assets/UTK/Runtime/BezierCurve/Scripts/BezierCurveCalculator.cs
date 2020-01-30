@@ -110,7 +110,7 @@ namespace UTK.Runtime.BezierCurve
 
 #if UNITY_EDITOR
 
-        public static List<Vector3> GetPoints(SerializedProperty pathlist, int segment, Transform parent)
+        public static List<Vector3> GetPoints(SerializedProperty pathlist, int segment)
         {
             var points = new List<Vector3>();
             float fs = segment; //to float.
@@ -123,11 +123,6 @@ namespace UTK.Runtime.BezierCurve
                 var point1 = preelement.FindPropertyRelative("handle2").vector3Value;
                 var point2 = element.FindPropertyRelative("handle1").vector3Value;
                 var point3 = element.FindPropertyRelative("anchore").vector3Value;
-
-                point0 = parent.TransformPoint(point0);
-                point1 = parent.TransformPoint(point1);
-                point2 = parent.TransformPoint(point2);
-                point3 = parent.TransformPoint(point3);
 
 
                 for (var j = 0; j <= segment; j++)

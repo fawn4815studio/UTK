@@ -254,6 +254,7 @@ namespace UTK.Runtime.BezierCurve
         private void OnSceneGUI()
         {
             CreatePreviewRootIfNotExists();
+
             previewRootObject.transform.position = rootObject.transform.position;
             previewRootObject.transform.rotation = rootObject.transform.rotation;
 
@@ -307,7 +308,9 @@ namespace UTK.Runtime.BezierCurve
                 }
             }
 
-            DrawBezierCurve(BezierCurveCalculator.GetPoints(points, 50, previewRootObject.transform));
+            var drawpoints = BezierCurveCalculator.GetPoints(points, 50);
+            DrawBezierCurve(drawpoints, false);
+
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -474,13 +477,14 @@ namespace UTK.Runtime.BezierCurve
             }
         }
 
-        private void DrawBezierCurve(List<Vector3> points)
+        private void DrawBezierCurve(List<Vector3> points, bool worldspace)
         {
             var linerenderer = previewRootObject.GetComponent<LineRenderer>();
 
             if (linerenderer == null)
             {
                 linerenderer = previewRootObject.AddComponent<LineRenderer>();
+                linerenderer.useWorldSpace = worldspace;
                 linerenderer.material = new Material(Shader.Find("Sprites/Default"));
                 linerenderer.startColor = Color.red;
                 linerenderer.endColor = Color.blue;
@@ -498,7 +502,9 @@ namespace UTK.Runtime.BezierCurve
         {
             reorderableList = null;
             points = serializedObject.FindProperty("points");
-            rootObject = (target as BezierCurveController).gameObject;
+
+            var t = (target as BezierCurveController).gameObject;
+            rootObject = t.transform.parent != null ? t.transform.parent.gameObject : t;
 
             previewPoints = null;
             previewPoints = new List<PreviewPoint>();

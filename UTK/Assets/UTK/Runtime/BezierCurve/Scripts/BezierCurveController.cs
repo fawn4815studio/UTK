@@ -90,7 +90,7 @@ namespace UTK.Runtime.BezierCurve
                 minpos = Vector3.zero;
                 maxpos = current.Point;
 
-                minrot = transform.rotation;
+                minrot = transform.localRotation;
                 maxrot = current.Rot;
             }
             else
@@ -110,18 +110,17 @@ namespace UTK.Runtime.BezierCurve
             var newpos = Vector3.Slerp(minpos, maxpos, div);
             var newrot = Quaternion.Slerp(minrot, maxrot, div);
 
-            if (autoLookDirection && !newrot.Equals(Quaternion.identity) && !float.IsNaN(newrot.x))
+            if (autoLookDirection && !float.IsNaN(newrot.x))
             {
-                transform.rotation = newrot;
+                transform.localRotation = newrot;
             }
 
             if (!float.IsNaN(newpos.x))
             {
-                transform.position = newpos;
+                transform.localPosition = newpos;
             }
 
             elapsedTime += Time.deltaTime;
-            //Debug.Log(elapsedTime);
         }
 
         void InitRunitmePoints()
@@ -134,14 +133,14 @@ namespace UTK.Runtime.BezierCurve
             for (int i = 0; i < size; i++)
             {
                 var rp = new RuntimePoint();
-                rp.Point = transform.TransformPoint(vecpoints[i]);
+                rp.Point = vecpoints[i];
                 rp.Distance = i == 0 ? 0 : Vector3.Distance(vecpoints[i - 1], vecpoints[i]);
                 totaldistance += rp.Distance;
                 rp.TotalDistance = totaldistance;
 
                 if (i == 0)
                 {
-                    rp.Rot = transform.rotation;
+                    rp.Rot = transform.localRotation;
                 }
                 else
                 {
@@ -150,14 +149,6 @@ namespace UTK.Runtime.BezierCurve
                 }
 
                 runtimePoints.Add(rp);
-
-                /*
-                if (i > 1)
-                {
-                    Debug.DrawLine(runtimePoints[i - 1].Point, runtimePoints[i].Point, Color.blue, 100.0f);
-                }
-                */
-
             }
 
             var averagespeed = totaldistance / time;
