@@ -107,7 +107,7 @@ namespace UTK.Runtime.BezierCurve
 
             //Map to 0-1 range.
             var div = (Mathf.Clamp(elapsedTime, min, max) - min) / (max - min);
-            var newpos = Vector3.Slerp(minpos, maxpos, div);
+            var newpos = Vector3.Lerp(minpos, maxpos, div);
             var newrot = Quaternion.Slerp(minrot, maxrot, div);
 
             if (autoLookDirection && !float.IsNaN(newrot.x))
