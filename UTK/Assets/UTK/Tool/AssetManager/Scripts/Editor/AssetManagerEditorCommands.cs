@@ -36,7 +36,7 @@ namespace UTK.Tool.AssetManager
                     if (a.Extension.Equals(".meta") == false)
                     {
                         Uri relativeuri = baseuri.MakeRelativeUri(new Uri(a.FullName));
-                        AssetImporter importer = AssetImporter.GetAtPath(relativeuri.OriginalString); //Get the relative path for searching AssetImporter.
+                        UnityEditor.AssetImporter importer = UnityEditor.AssetImporter.GetAtPath(relativeuri.OriginalString); //Get the relative path for searching AssetImporter.
                         if (importer != null)
                         {
                             importer.assetBundleName = remove ? string.Empty : System.IO.Path.GetFileNameWithoutExtension(a.Name) + ".ab";

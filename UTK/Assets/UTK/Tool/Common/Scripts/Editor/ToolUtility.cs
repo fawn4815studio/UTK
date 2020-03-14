@@ -21,6 +21,14 @@ namespace UTK.Tool.Common
             None  //Not found
         }
 
+        public static string[] ImportableExtension = new string[]
+        {
+            ".fbx",
+            ".jpg",
+            ".png",
+            ".bmp"
+        };
+
         /// <summary>
         /// The Camera that is rendering last active SceneView.
         /// </summary>
@@ -111,6 +119,32 @@ namespace UTK.Tool.Common
         {
             Selection.activeObject = null;
             Selection.objects = null;
+        }
+
+        /// <summary>
+        /// Select the folder path child in <see cref="Application.dataPath"/>
+        /// </summary>
+        /// <param name="valid">Is valid path.</param>
+        /// <returns>If valid return select path, else return null.</returns>
+        public static string GetAssetsChildFolderUsingPanel(out bool valid)
+        {
+            var path = Application.dataPath;
+            valid = true;
+
+            path = EditorUtility.OpenFolderPanel("Please select a import destination.", Application.dataPath, "");
+
+            if (!path.Contains(Application.dataPath))
+            {
+                valid = false;
+                return null;
+            }
+
+            return path;
+        }
+
+        public static bool IsImportableAsset(string name)
+        {
+            return ImportableExtension.Contains(System.IO.Path.GetExtension(name));
         }
     }
 }
