@@ -13,6 +13,9 @@ namespace UTK.Runtime.BezierCurve
         private bool loop = false;
 
         [SerializeField]
+        private bool pause = false;
+
+        [SerializeField]
         private float time = 0.0f;
 
         [SerializeField]
@@ -35,8 +38,19 @@ namespace UTK.Runtime.BezierCurve
 
         private List<RuntimePoint> runtimePoints = new List<RuntimePoint>();
         private float elapsedTime = 0.0f;
-
         private bool end = false;
+
+        #region Property
+
+        public bool Pause { get => pause; set => pause = value; }
+
+        #endregion
+
+        public void ResetElapsedTime()
+        {
+            elapsedTime = 0.0f;
+            end = false;
+        }
 
         #region Internal
 
@@ -49,7 +63,7 @@ namespace UTK.Runtime.BezierCurve
         // Update is called once per frame
         void Update()
         {
-            if (end) return;
+            if (Pause || end) return;
 
             RuntimePoint previous = null, current = null;
             float min, max;

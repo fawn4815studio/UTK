@@ -15,6 +15,7 @@ namespace UTK.Runtime.BezierCurve
         GameObject previewRootObject;
         SerializedProperty points;
         SerializedProperty loop;
+        SerializedProperty pause;
         SerializedProperty time;
         SerializedProperty segment;
         SerializedProperty autoLookDirection;
@@ -236,7 +237,10 @@ namespace UTK.Runtime.BezierCurve
             serializedObject.Update();
 
             loop = serializedObject.FindProperty("loop");
-            loop.boolValue = EditorGUILayout.Toggle("Loop bezier curve", loop.boolValue);
+            loop.boolValue = EditorGUILayout.Toggle("IsLoop", loop.boolValue);
+
+            pause = serializedObject.FindProperty("pause");
+            pause.boolValue = EditorGUILayout.Toggle("IsPause", pause.boolValue);
 
             time = serializedObject.FindProperty("time");
             time.floatValue = EditorGUILayout.FloatField("Time to spend", time.floatValue);
