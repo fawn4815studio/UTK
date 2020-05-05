@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UTK.Runtime.Manager;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,24 +9,16 @@ using UnityEditor;
 
 namespace UTK.Runtime.Utility
 {
-    public class ScriptableTemplate : ScriptableObject
+    public class ScriptableTemplate<T> : ScriptableObject
+        where T : ScriptableObject
     {
         /// <summary>
         /// Change to a suitable storage location.
         /// </summary>
-        private static readonly string SAVE_PATH = "Assets/UTK/Config/ScriptableTemplate.asset";
-        private static ScriptableTemplate instance;
+        private static readonly string SAVE_PATH = "Assets/UTK/Config/Resources/GameData.asset";
+        private static T instance;
 
-#if UNITY_EDITOR
-        [MenuItem("UTK/Utility/Open ScriptableTemplate")]
-        private static void CreateOrOpenScriptableTemplate()
-        {
-            Selection.activeObject = Instance;
-        }
-
-#endif
-
-        public static ScriptableTemplate Instance
+        public static T Instance
         {
             get
             {
@@ -33,15 +26,18 @@ namespace UTK.Runtime.Utility
                 var path = AssetDatabase.AssetPathToGUID(SAVE_PATH);
                 if (string.IsNullOrEmpty(path))
                 {
-                    instance = ScriptableObject.CreateInstance<ScriptableTemplate>();
+                    instance = ScriptableObject.CreateInstance<T>();
                     AssetDatabase.CreateAsset(instance, SAVE_PATH);
                 }
 #endif
+
+                if (instance == null)
+                {
+                    instance = AssetManager.Instance.LoadSync<T>(SAVE_PATH);
+                }
+
                 return instance;
             }
         }
-
-
     }
-
 }
