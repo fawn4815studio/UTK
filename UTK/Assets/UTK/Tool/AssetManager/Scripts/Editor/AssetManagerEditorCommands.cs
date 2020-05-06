@@ -62,7 +62,8 @@ namespace UTK.Tool.AssetManager
 
         static void CreateOrUpdateResourceList(string[] folders)
         {
-            ResourceList.Instance.resourcePaths = new List<ResourceList.ResourcePath>();
+            var instance = ScriptableObject.CreateInstance<ResourceList>();
+            instance.resourcePaths = new List<ResourceList.ResourcePath>();
 
             Uri baseuri = new Uri(Application.dataPath);
 
@@ -76,11 +77,11 @@ namespace UTK.Tool.AssetManager
                         Uri relativeuri = baseuri.MakeRelativeUri(new Uri(a.FullName));
                         UnityEditor.AssetImporter importer = UnityEditor.AssetImporter.GetAtPath(relativeuri.OriginalString); //Get the relative path for searching AssetImporter.
                         var resourcepath = relativeuri.OriginalString.Substring(relativeuri.OriginalString.IndexOf("Resources") + 10); //+10 = Resources not include.
-                        resourcepath = resourcepath.Remove(resourcepath.IndexOf(System.IO.Path.GetExtension(resourcepath)));
+                        resourcepath = resourcepath.Remove(resourcepath.IndexOf(System.IO.Path.GetExtension(resourcepath))); //Remove extention
 
                         if (importer != null)
                         {
-                            ResourceList.Instance.resourcePaths.Add(new ResourceList.ResourcePath()
+                            instance.resourcePaths.Add(new ResourceList.ResourcePath()
                             {
                                 bundleName = System.IO.Path.GetFileNameWithoutExtension(a.Name).ToLower(),
                                 path = resourcepath
@@ -93,6 +94,15 @@ namespace UTK.Tool.AssetManager
 
                     }
                 }
+            }
+
+            AssetDatabase.CreateAsset(instance, ResourceList.SAVE_PATH);
+
+            //Set resource list bundle name.
+            UnityEditor.AssetImporter importer2 = UnityEditor.AssetImporter.GetAtPath(ResourceList.SAVE_PATH);
+            if (importer2 != null)
+            {
+                importer2.assetBundleName = System.IO.Path.GetFileNameWithoutExtension(ResourceList.RESOURCES_PATH) + ".ab";
             }
 
             AssetDatabase.Refresh();

@@ -19,8 +19,8 @@ namespace UTK.Runtime
 
         public List<ResourcePath> resourcePaths;
 
-        private static readonly string SAVE_PATH = "Assets/UTK/Config/Resources/ResourceList.asset";
-        private static readonly string RESOURCES_PATH = "ResourceList";
+        public static readonly string SAVE_PATH = "Assets/UTK/Config/Resources/ResourceList.asset";
+        public static readonly string RESOURCES_PATH = "ResourceList";
 
         private static ResourceList instance;
 
