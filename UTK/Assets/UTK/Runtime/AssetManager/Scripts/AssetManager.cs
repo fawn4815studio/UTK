@@ -196,6 +196,12 @@ namespace UTK.Runtime.Manager
             {
                 resourcepath = System.IO.Path.Combine(resourcepath, System.IO.Path.GetFileNameWithoutExtension(splitpathes[i]));
             }
+
+#else
+            if (ResourceList.Instance.resourcePaths != null && ResourceList.Instance.resourcePaths.Count != 0)
+            {
+                resourcepath = ResourceList.Instance.resourcePaths.FirstOrDefault(t => t.bundleName.Equals(assetname)).path;
+            }
 #endif
             return resourcepath;
         }

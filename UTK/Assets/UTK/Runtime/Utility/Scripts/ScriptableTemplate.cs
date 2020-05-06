@@ -12,10 +12,9 @@ namespace UTK.Runtime.Utility
     public class ScriptableTemplate<T> : ScriptableObject
         where T : ScriptableObject
     {
-        /// <summary>
-        /// Change to a suitable storage location.
-        /// </summary>
-        private static readonly string SAVE_PATH = "Assets/UTK/Config/Resources/GameData.asset";
+        private static readonly string SAVE_PATH = "Assets/UTK/Config/Resources/Template.asset";
+        private static readonly string BUNDLE_NAME = "template";
+
         private static T instance;
 
         public static T Instance
@@ -23,17 +22,22 @@ namespace UTK.Runtime.Utility
             get
             {
 #if UNITY_EDITOR
-                var path = AssetDatabase.AssetPathToGUID(SAVE_PATH);
-                if (string.IsNullOrEmpty(path))
+
+                var path = Application.dataPath;
+                path = path.Remove(path.IndexOf("Assets"));
+                path = System.IO.Path.Combine(path, SAVE_PATH);
+
+                if (!System.IO.File.Exists(path))
                 {
                     instance = ScriptableObject.CreateInstance<T>();
                     AssetDatabase.CreateAsset(instance, SAVE_PATH);
+                    EditorApplication.ExecuteMenuItem("UTK/AssetManager/Commands/Set bundle names to resources assets");
                 }
 #endif
 
                 if (instance == null)
                 {
-                    instance = AssetManager.Instance.LoadSync<T>(SAVE_PATH);
+                    instance = AssetManager.Instance.LoadSync<T>(BUNDLE_NAME);
                 }
 
                 return instance;
