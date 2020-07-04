@@ -47,8 +47,8 @@ namespace UTK.Runtime.Utility
 #if UNITY_EDITOR
 
         /*
-        [MenuItem("UTK/Temp", false, 1)]
-        static void CreateTextData()
+        [MenuItem("UTK/Scriptable", false, 1)]
+        static void CreateScriptableData()
         {
             var instance = AssetDatabase.LoadAssetAtPath(SAVE_PATH, typeof(ScriptableTemplate));
             if (instance == null)
