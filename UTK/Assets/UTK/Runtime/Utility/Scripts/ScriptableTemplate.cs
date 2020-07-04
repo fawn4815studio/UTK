@@ -43,5 +43,23 @@ namespace UTK.Runtime.Utility
                 return instance;
             }
         }
+
+#if UNITY_EDITOR
+
+        /*
+        [MenuItem("UTK/Temp", false, 1)]
+        static void CreateTextData()
+        {
+            var instance = AssetDatabase.LoadAssetAtPath(SAVE_PATH, typeof(ScriptableTemplate));
+            if (instance == null)
+            {
+                instance = ScriptableObject.CreateInstance<ScriptableTemplate>();
+                AssetDatabase.CreateAsset(instance, SAVE_PATH);
+            }
+            Selection.activeObject = instance;
+        }
+        */
+
+#endif
     }
 }
