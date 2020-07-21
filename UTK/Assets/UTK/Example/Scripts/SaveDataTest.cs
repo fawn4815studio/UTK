@@ -69,12 +69,14 @@ namespace UTK.Test
 
             var path = Path.Combine(Application.persistentDataPath, "TestData.asset");
             Debug.Log(path);
+            Debug.Log(TestSaveData.IsExists(path));
+
             var t = new TestSaveData();
             t.SaveToDisc(path);
 
             yield return new WaitForSeconds(2.0f);
 
-            var lt = SaveData<TestSaveData>.CreateFromJSON<TestSaveData>(path);
+            var lt = TestSaveData.CreateFromJSON<TestSaveData>(path);
             Debug.Log(lt.testFloat);
             Debug.Log(lt.testInt);
 
@@ -84,6 +86,10 @@ namespace UTK.Test
                 Debug.Log(st.hp);
                 Debug.Log(st.damage);
             }
+
+            yield return new WaitForSeconds(2.0f);
+
+            Debug.Log(TestSaveData.IsExists(path));
         }
     }
 
