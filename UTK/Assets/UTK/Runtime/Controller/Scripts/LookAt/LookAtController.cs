@@ -24,13 +24,7 @@ namespace UTK.Runtime.Controller
         [SerializeField]
         float headLimit;
 
-        [SerializeField]
-        GameObject debugSphere;
-
         float elapsedTime;
-        Quaternion startHead;
-        Quaternion startBody;
-        Vector3 startHeadVec;
 
         #region Property
 
@@ -48,16 +42,6 @@ namespace UTK.Runtime.Controller
             get => target.position - head.position;
         }
 
-        float TargetDistance
-        {
-            get
-            {
-                var to = target.transform.position;
-                var from = head.transform.position;
-                return Vector3.Distance(to, from);
-            }
-        }
-
         #endregion
 
         #region Internal
@@ -65,9 +49,6 @@ namespace UTK.Runtime.Controller
         // Start is called before the first frame update
         void Start()
         {
-            startHead = head.transform.localRotation;
-            startBody = body.transform.localRotation;
-            startHeadVec = head.forward.normalized;
 
         }
 
@@ -76,19 +57,41 @@ namespace UTK.Runtime.Controller
         {
             if (head == null || target == null) return;
 
-            Debug.DrawRay(head.transform.position, HeadToTarget.normalized * TargetDistance, Color.red);
+            var direction = Vector3.RotateTowards(head.forward, HeadToTarget, 1, 0);
+            var lookrot = Quaternion.LookRotation(HeadToTarget);
+            var framerot = Quaternion.Slerp(Quaternion.identity, Quaternion.Inverse(head.parent.rotation) * lookrot, LerpTime);
+            var limitrot = Quaternion.RotateTowards(Quaternion.identity, framerot, headLimit);
 
-            var angle = Vector3.Angle(HeadToTarget, startHeadVec);
-            var axis = Vector3.Cross(startHeadVec, HeadToTarget).normalized;
-            var angleAxis = Quaternion.AngleAxis(Mathf.Lerp(0, angle, LerpTime), axis);
-            var pos = angleAxis * startHeadVec;
+            head.localRotation = limitrot;
 
-            debugSphere.transform.position = head.transform.position + (pos * TargetDistance);
+            if (useBodyRotate)
+            {
+                if (Quaternion.Angle(framerot, limitrot) > 0)
+                {
+                    //Debug.Log(string.Format("Qa : {0}", Quaternion.Angle(framerot, limitrot)));
 
-            var framerot = Quaternion.LookRotation(debugSphere.transform.position - head.transform.position);
-            var futureangle = Vector3.Angle(startHeadVec, framerot * startHeadVec);
+                    var basehead = Quaternion.Inverse(head.localRotation) * head.forward;
+                    var futurehead = framerot * basehead;
+                    basehead.y = futurehead.y = 0;
+                    var angle = Vector3.SignedAngle(basehead, futurehead, Vector3.up);
 
-            head.localRotation = framerot;
+                    /*
+                    Debug.DrawRay(head.position, basehead * 10, Color.blue);
+                    Debug.DrawRay(head.position, futurehead * 10, Color.red);
+                    Debug.Log(string.Format("Angle : {0}", angle));
+                    */
+
+                    if (Mathf.Abs(angle) > headLimit)
+                    {
+                        var hf = head.forward;
+                        hf.y = 0;
+                        var frameangle = Vector3.SignedAngle(hf, futurehead, Vector3.up);
+                        //Debug.Log(string.Format("FrameAngle : {0}", frameangle));
+                        body.localRotation = body.localRotation * Quaternion.AngleAxis(frameangle, Vector3.up);
+                    }
+                }
+            }
+
             elapsedTime += Time.deltaTime;
         }
 
