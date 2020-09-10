@@ -154,6 +154,7 @@ namespace UTK.Runtime.BezierCurve
 
                 if (i == 0)
                 {
+                    rp.Point = transform.localPosition;
                     rp.Rot = transform.localRotation;
                 }
                 else

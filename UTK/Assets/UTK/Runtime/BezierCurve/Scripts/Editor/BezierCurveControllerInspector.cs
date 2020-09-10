@@ -251,6 +251,12 @@ namespace UTK.Runtime.BezierCurve
             autoLookDirection = serializedObject.FindProperty("autoLookDirection");
             autoLookDirection.boolValue = EditorGUILayout.Toggle("Auto rotate", autoLookDirection.boolValue);
 
+            if (GUILayout.Button("ToSelectPoint") && previewPoints != null && previewPoints.Count > 0 && reorderableList.index != -1)
+            {
+                var t = (target as BezierCurveController).gameObject;
+                t.transform.localPosition = previewPoints[reorderableList.index].Anchore;
+            }
+
             reorderableList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
